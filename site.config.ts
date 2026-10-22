@@ -61,8 +61,8 @@ export const siteConfig = {
   // block, cobalt, coral, burst, twist, mint, playful, nature, earthy, and the
   // pastels peach, lavender and sky, and the neutrals stone, sand, slate and
   // graphite (see themes.ts). To change single colours:
-  // theme: { ...themes.mint, primary: "#2f9e75" },
-  theme: themes.mint,
+  // theme: { ...themes.coral, primary: "#b83a22" },
+  theme: themes.coral,
 
   hero: {
     badge: "Product Engineer",
