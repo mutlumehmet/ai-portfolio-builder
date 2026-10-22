@@ -20,7 +20,7 @@ Everything is already done for you.
 | **Admin panel** | Edit projects, tags, FAQs and experience in the browser at `/admin`. |
 | **Security** | Every admin action checks the session, login attempts are limited, and AI inputs have length caps. |
 | **Rate limits** | Per-IP limits on every AI endpoint. |
-| **Colour themes** | Ready-made [colour themes](#colour-themes), including pastels, switched with one line. |
+| **Colour themes** | Ready-made [colour themes](#colour-themes), including pastels and neutrals, switched with one line. |
 | **Feature flags** | Switch any part off in `site.config.ts` or with an environment variable. |
 | **Optional AI layer** | Switch the chat, the fit check and the MCP server off and you have a plain portfolio. |
 
