@@ -152,3 +152,15 @@ export function toFaqsJson(faqs: ProfileDraft["faqs"]) {
 export function savableProjects(projects: DraftProject[]) {
   return projects.filter((p) => p.slug && p.title && p.summary);
 }
+
+/** What POST /api/admin/import returns to the review screen. */
+export type DraftResponse = {
+  /** Changes on every run, so the review screen starts fresh for a new draft. */
+  id: number;
+  error: string | null;
+  warnings: string[];
+  linkedinFailure: string | null;
+  draft: ProfileDraft | null;
+  dropped: string[];
+  fromFixture: boolean;
+};

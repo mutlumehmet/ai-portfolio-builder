@@ -1,20 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { startTransition, useActionState, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { configSnippet } from "@/lib/profile-import/config-snippet";
-import { savableProjects, toExperienceJson, toFaqsJson, type ProfileDraft } from "@/lib/profile-import/schema";
+import {
+  savableProjects,
+  toExperienceJson,
+  toFaqsJson,
+  type DraftResponse,
+  type ProfileDraft,
+} from "@/lib/profile-import/schema";
 
-import { generateImportDraft, saveImportDraft, type DraftState, type SaveResult } from "./actions";
+import { saveImportDraft, type SaveResult } from "./actions";
 
 type Current = { photo: string; pronouns: "she" | "he" | "they" };
 
-const initialState: DraftState = {
+const initialState: DraftResponse = {
   id: 0,
   error: null,
   warnings: [],
@@ -25,16 +31,31 @@ const initialState: DraftState = {
 };
 
 export function ImportClient({ hasKey, current }: { hasKey: boolean; current: Current }) {
-  const [state, formAction, pending] = useActionState(generateImportDraft, initialState);
+  const [state, setState] = useState(initialState);
+  const [pending, startDrafting] = useTransition();
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
 
-  // Submitted by hand rather than with <form action>, so React does not clear
-  // the chosen files when LinkedIn fails and the owner adds the PDF.
+  // Posted to a route handler (file uploads), by hand, so the chosen files
+  // stay in place when LinkedIn fails and the owner adds the PDF.
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    startTransition(() => formAction(data));
+    startDrafting(async () => {
+      try {
+        const res = await fetch("/api/admin/import", { method: "POST", body: data });
+        const json = (await res.json().catch(() => null)) as DraftResponse | null;
+        if (res.status === 401) {
+          setState({ ...initialState, id: Date.now(), error: "Your admin session has ended. Log in again." });
+        } else if (json) {
+          setState(json);
+        } else {
+          setState({ ...initialState, id: Date.now(), error: `The import failed (HTTP ${res.status}).` });
+        }
+      } catch {
+        setState({ ...initialState, id: Date.now(), error: "Could not reach the server. Try again." });
+      }
+    });
   }
 
   return (
