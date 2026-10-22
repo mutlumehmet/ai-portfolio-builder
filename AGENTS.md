@@ -48,3 +48,14 @@ For database work, use the local Docker database (`npm run db:up`), never a shar
 
 * Keep sample content clearly fictional.
 * English only. In prose, avoid em dashes and en dashes; use commas, colons or full stops.
+
+## Setting the site up for a new owner
+
+When someone asks you to set this template up for them:
+
+1. **Ask first, in short rounds.** Name, role, location, contact email, LinkedIn and GitHub URLs, pronouns, a colour theme (the keys in `themes.ts`, preview in `docs/images/themes.png`), Neon or Docker for the database, and whether they want the AI layer (it needs an OpenAI key; without one it is switched off).
+2. **Run the setup.** `npm run setup` asks the same questions in order and writes `site.config.ts` and `.env`, creates the tables and loads the sample content. It reads answers line by line from stdin, so you can pipe them in, or run it in a terminal the owner can type into. Never print or commit their keys or password.
+3. **Replace the sample persona's words** in `site.config.ts`: `hero`, `stats`, `journey`, `seo.description` and `seo.tagline`, the chat persona and suggestions. Ask the owner for their own wording; do not invent achievements or numbers.
+4. **Replace the sample content.** For each of their projects write a JSON file in `content/projects/` in the shape of `scripts/example-project.json` and delete the sample files there. Replace `content/experience.json` and `content/faqs.json`. Remove the sample projects from the database with `npm run project:delete -- <slug>`, then run `npm run db:seed`, and `npm run rag:ingest` if the AI layer is on. A single project can also be added or updated with `npm run project:upsert -- path/to/project.json`.
+5. **Images and CV.** Project images go in `public/projects/<slug>/`, the photo replaces `public/avatar.svg` (update `person.photo`), the CV replaces `public/cv.pdf`.
+6. **Show the result.** Start `npm run dev`, ask the owner to look at http://localhost:3000 and `/admin`, and fix what they point out. Before they deploy, point them to "Cost and security" in the README.

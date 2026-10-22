@@ -8,7 +8,35 @@
 
 *See it live* opens the portfolio this template was extracted from: same structure, AI chat and job-fit check, with its own content and colours.
 
+## Three ways to set it up
+
+**1. Deploy with Vercel, no code**
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
+
+Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Details in [Deploy in one click](#deploy-in-one-click).
+
+**2. One command on your machine**
+
+```bash
+git clone https://github.com/mutlumehmet/ai-portfolio-starter.git my-portfolio
+cd my-portfolio && npm install && npm run setup
+```
+
+Asks for your name, links, colour theme, database and OpenAI key, writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
+
+**3. Ask your coding agent**
+
+Open the cloned folder in Claude Code, Codex or another coding agent and paste:
+
+```text
+Set up this AI Portfolio Starter for me. Read README.md and AGENTS.md first, then follow
+"Setting the site up for a new owner" in AGENTS.md. Ask me for my details, projects and
+experience a few questions at a time, fill everything in, load it, and start the site so
+I can check it.
+```
+
+The agent asks for your details and projects, fills in the config, replaces the sample content with yours and loads it with the project scripts.
 
 ## Take the tour
 
