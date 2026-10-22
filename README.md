@@ -4,13 +4,37 @@
 
 **A complete portfolio website for developers and designers, plus an optional AI layer that answers questions about your work from your own content.**
 
-Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see every page working before you add your own content.
-
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
+
+## Take the tour
+
+Every page of the site, shown with the sample content: home, selected work, project pages, side projects, experience, FAQ, the admin panel and the AI layer.
+
+![Site tour: the home page, selected work, a project page, side projects, experience, the FAQ, the admin panel and the AI chat, one after another in a browser frame](docs/images/site-tour.gif)
+
+## How the AI layer answers
+
+The chat, the fit check and the MCP server answer only from your own content, through the same search. Details in [The AI layer](#the-ai-layer-optional).
+
+![How it works: your content goes into Postgres, rag:ingest turns it into embeddings, and the chat, the fit check and the MCP server answer only from the closest chunks](docs/images/how-it-works.gif)
+
+## Manage it with your agent
+
+Edit content in `/admin`, or let any coding agent add and remove projects with a JSON file. The search index re-syncs after every write. See [Make it yours](#make-it-yours).
+
+![A portfolio you can manage with your agent: the admin panel next to a terminal where a coding agent runs npm run project:upsert and the search index re-syncs](docs/images/manage-with-agent.png)
+
+## Everything is ready
+
+The parts you would otherwise build yourself are already in place. Details in [Ready to deploy](#ready-to-deploy).
+
+![Everything is ready: one-click deploy, self-setup database, Postgres with pgvector, ready backend, admin panel, security, rate limits, colour themes, feature flags and an optional AI layer](docs/images/everything-ready.png)
 
 ## Ready to deploy
 
-Everything is already done for you.
+Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see every page working before you add your own content.
+
+Everything below is already done for you.
 
 | Built in | What you get |
 |---|---|
@@ -111,7 +135,7 @@ On the home page, visitors and recruiters get one panel with three tabs:
 
 ### How the AI layer works
 
-![How it works: your content goes into Postgres, rag:ingest turns it into embeddings, and the chat, the fit check and the MCP server answer only from the closest chunks](docs/images/how-it-works.gif)
+The [animation above](#how-the-ai-layer-answers) shows these steps.
 
 1. Your content (projects, experience, FAQs) lives in Postgres. You load it from the JSON files in `content/` or edit it in `/admin`.
 2. `npm run rag:ingest` splits that content into short chunks, turns each into an embedding (a list of 1536 numbers that captures its meaning) with OpenAI, and stores them in a pgvector column.
@@ -204,7 +228,7 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 3. **Images** go in `public/`. Project images live in `public/projects/<slug>/`; their sizes are measured at install and build time so covers of the right shape fill their card. Replace `public/avatar.svg` with your photo (and update `person.photo`).
 4. **CV:** replace `public/cv.pdf` with your own.
 5. **`/admin`** lets you edit all content in the browser once deployed. Every save updates the chat's search index in the background.
-6. **Single projects from the command line:** `npm run project:upsert -- path/to/project.json`.
+6. **Projects from the command line or a coding agent:** `npm run project:upsert -- path/to/project.json` creates or updates one project from a JSON file (same shape as `scripts/example-project.json`), and `npm run project:delete -- <slug>` removes one. Both re-sync the chat's search index straight away, so an AI coding assistant can manage your projects for you.
 
 ### Colour themes
 
