@@ -19,6 +19,7 @@
     "db:down": "docker compose down",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
+    "import": "tsx scripts/import-profile.ts",
     "project:upsert": "tsx scripts/upsert-project.ts",
     "project:delete": "tsx scripts/delete-project.ts",
     "rag:ingest": "tsx scripts/ingest.ts",

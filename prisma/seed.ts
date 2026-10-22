@@ -14,6 +14,7 @@ import { z } from "zod";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { createDbAdapter } from "../src/lib/db-adapter";
 import { upsertProject } from "../scripts/lib/upsert";
+import { upsertExperienceRoles } from "../src/lib/profile-import/save";
 
 const prisma = new PrismaClient({ adapter: createDbAdapter() });
 const CONTENT = join(process.cwd(), "content");
@@ -47,31 +48,8 @@ async function seedProjects() {
 
 async function seedExperience() {
   const roles = experienceSchema.parse(readJson(join(CONTENT, "experience.json")));
-  for (const [order, role] of roles.entries()) {
-    const fields = {
-      title: role.title,
-      company: role.company,
-      location: role.location ?? null,
-      startDate: new Date(role.startDate),
-      endDate: role.endDate ? new Date(role.endDate) : null,
-      order,
-    };
-    const blocks = role.highlights.map((text, i) => ({
-      order: i,
-      type: "paragraph" as const,
-      data: { text },
-    }));
-    await prisma.$transaction(async (tx) => {
-      const existing = await tx.experience.findUnique({ where: { slug: role.slug } });
-      if (existing) await tx.experienceBlock.deleteMany({ where: { experienceId: existing.id } });
-      await tx.experience.upsert({
-        where: { slug: role.slug },
-        update: { ...fields, blocks: { create: blocks } },
-        create: { slug: role.slug, ...fields, blocks: { create: blocks } },
-      });
-    });
-    console.log(`Saved role ${role.title} at ${role.company}`);
-  }
+  await upsertExperienceRoles(prisma, roles);
+  for (const role of roles) console.log(`Saved role ${role.title} at ${role.company}`);
 }
 
 async function seedFaqs() {

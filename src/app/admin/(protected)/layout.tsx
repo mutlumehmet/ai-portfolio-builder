@@ -31,6 +31,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link href="/admin/experience" className="text-sm font-bold hover:underline">
               Experience
             </Link>
+            <Link href="/admin/import" className="text-sm font-bold hover:underline">
+              Import
+            </Link>
             <Link href="/" className="text-sm font-bold hover:underline">
               View site
             </Link>

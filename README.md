@@ -10,11 +10,13 @@
 
 ## Three ways to set it up
 
+All three can start from your LinkedIn profile, CV and GitHub: the draft is made by your own OpenAI key or your own coding agent, and you review it before anything is written (see [Import from LinkedIn, CV and GitHub](#import-from-linkedin-cv-and-github)).
+
 **1. Deploy with Vercel, no code**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
-Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Details in [Deploy in one click](#deploy-in-one-click).
+Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Then open `/admin/import` on your new site to draft your content from LinkedIn, a CV and GitHub. Details in [Deploy in one click](#deploy-in-one-click).
 
 **2. One command on your machine**
 
@@ -23,7 +25,7 @@ git clone https://github.com/mutlumehmet/ai-portfolio-starter.git my-portfolio
 cd my-portfolio && npm install && npm run setup
 ```
 
-Asks for your name, links, colour theme, database and OpenAI key, writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
+Offers to import from your LinkedIn, CV and GitHub first, then asks for your name, links, colour theme, database and OpenAI key, writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
 
 **3. Ask your coding agent**
 
@@ -31,12 +33,13 @@ Open the cloned folder in Claude Code, Codex or another coding agent and paste:
 
 ```text
 Set up this AI Portfolio Starter for me. Read README.md and AGENTS.md first, then follow
-"Setting the site up for a new owner" in AGENTS.md. Ask me for my details, projects and
-experience a few questions at a time, fill everything in, load it, and start the site so
-I can check it.
+"Setting the site up for a new owner" in AGENTS.md. Start by asking me for my LinkedIn URL,
+CV file and GitHub username, draft my content from them without inventing anything, and
+show me the summary before you write. Then ask me what is missing a few questions at a
+time, fill everything in, load it, and start the site so I can check it.
 ```
 
-The agent asks for your details and projects, fills in the config, replaces the sample content with yours and loads it with the project scripts.
+The agent reads your LinkedIn, CV and GitHub, shows you a draft, asks for anything missing, fills in the config, replaces the sample content with yours and loads it with the project scripts.
 
 ## Take the tour
 
@@ -266,6 +269,7 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 | `NEXT_PUBLIC_SITE_URL` | No | Public URL; overrides `url` in `site.config.ts`. |
 | `FEATURE_*` | No | Feature flag overrides, see below. |
 | `RATE_LIMIT_PER_MINUTE`, `RATE_LIMIT_PER_DAY` | No | Per-IP limits for the AI endpoints. |
+| `GITHUB_TOKEN` | No | Used by the profile import for a higher GitHub rate limit. Without it, GitHub allows 60 requests an hour. |
 
 **About the embedding dimension:** the `Chunk.embedding` column is `vector(1536)`, the output size of `text-embedding-3-small`. If you switch to a model with a different size, change `vector(1536)` in `prisma/schema.prisma`, create a new migration, and run `npm run rag:ingest -- --full`.
 
@@ -277,6 +281,22 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 4. **CV:** replace `public/cv.pdf` with your own.
 5. **`/admin`** lets you edit all content in the browser once deployed. Every save updates the chat's search index in the background.
 6. **Projects from the command line or a coding agent:** `npm run project:upsert -- path/to/project.json` creates or updates one project from a JSON file (same shape as `scripts/example-project.json`), and `npm run project:delete -- <slug>` removes one. Both re-sync the chat's search index straight away, so an AI coding assistant can manage your projects for you.
+
+### Import from LinkedIn, CV and GitHub
+
+Instead of typing everything, give the import your LinkedIn profile URL, a CV file (PDF, .docx or .txt, up to 5 MB) and your GitHub username. Each one is optional. It drafts your name, role, location, links, home page text (badge, headline, intro, stats, journey), SEO text, experience, FAQs and projects, and shows you a summary before anything is written.
+
+* **What is read.** LinkedIn: your public profile page. CV: the text of the file. GitHub: your public profile and up to six of your own repositories that are not forks or archived (most stars first, then the most recently updated), with their descriptions, topics, languages and READMEs. `GITHUB_TOKEN` is used when set, for a higher rate limit.
+* **LinkedIn is best effort.** LinkedIn often blocks automated reads. The import tries once, with no login and no retries, and tells you when it could not read the page. Then open your profile on LinkedIn, choose More, then Save to PDF, and give that PDF as your CV file instead.
+* **Nothing is made up.** The model is told to use only facts from your sources and to leave anything unknown empty. Links, your email address and stat numbers that do not appear in your sources are dropped, and the summary lists what was left out. Check the draft anyway.
+* **Privacy.** Your CV and profile text are sent to OpenAI with your own key (or read by your own coding agent). Nothing is stored except what you approve.
+* **Cost.** One model call per draft, a few cents at most with the default model.
+
+Where to run it:
+
+* `npm run setup` asks "Import from LinkedIn, CV and GitHub?" first. The draft becomes the default answer to each question, so you can still change any of them, and it writes `site.config.ts` and `content/`.
+* On a deployed site, open `/admin/import`. It saves projects, experience and FAQs to the database, and gives you a `site.config.ts` snippet for your name and home page text to paste, commit and redeploy (a deployed site cannot change its own config). It uses the deployment's `OPENAI_API_KEY`.
+* A coding agent can run `npm run import -- --linkedin <url> --cv <path> --github <user> --out draft.json`, show you the summary, and after your yes write it with `npm run import -- --apply draft.json`.
 
 ### Colour themes
 
@@ -337,10 +357,10 @@ Other MCP clients that support remote HTTP servers take the same URL. MCP calls 
 site.config.ts        everything person-specific, plus feature flags
 content/              sample projects, experience and FAQs (JSON)
 prisma/               schema, single init migration, seed (loads content/)
-scripts/              ingest, project upsert and delete, cover measuring
+scripts/              setup, profile import, ingest, project upsert and delete, cover measuring
 src/app/              pages, admin, API routes (chat, fit-check, parse-jd, mcp), /cv
 src/components/       UI, including shadcn/ui primitives in ui/
-src/lib/              config, RAG, index sync, auth, rate limiting, content blocks
+src/lib/              config, RAG, index sync, auth, rate limiting, content blocks, profile import
 public/               avatar, sample CV, project images, embed video player
 docker-compose.yml    local Postgres with pgvector
 ```
