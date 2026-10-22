@@ -1,0 +1,63 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 2707 >>
+stream
+BT
+/F2 24 Tf 1 0 0 1 56 800 Tm (Odile Brandqvist) Tj
+/F1 11 Tf 1 0 0 1 56 778 Tm (Product Engineer  |  Edinburgh, Scotland  |  hello@example.com) Tj
+/F2 9 Tf 1 0 0 1 56 760 Tm (SAMPLE CV FOR A FICTIONAL PERSON. Replace public/cv.pdf with your own.) Tj
+/F2 14 Tf 1 0 0 1 56 730 Tm (Profile) Tj
+/F1 10 Tf 1 0 0 1 56 712 Tm (Product engineer who builds calm, offline-first software for people who work on their feet:) Tj
+/F1 10 Tf 1 0 0 1 56 698 Tm (drivers, nurses and warehouse teams. Nine years in software after three in civil engineering.) Tj
+/F2 14 Tf 1 0 0 1 56 670 Tm (Experience) Tj
+/F2 11 Tf 1 0 0 1 56 648 Tm (Staff Product Engineer, Saltmarsh Transit Co. \(2024 to now\), Edinburgh \(hybrid\)) Tj
+/F1 10 Tf 1 0 0 1 56 633 Tm (- Leads product engineering for the driver and depot apps used across a regional freight co-operative.) Tj
+/F1 10 Tf 1 0 0 1 56 618 Tm (- Designed the offline sync queue behind Route Ledger, which has not lost a proof of delivery since launch.) Tj
+/F1 10 Tf 1 0 0 1 56 603 Tm (- Runs a fortnightly ride-along programme so engineers spend a shift with a driver.) Tj
+/F2 11 Tf 1 0 0 1 56 581 Tm (Senior Product Engineer, Brindlecart \(2021 to 2024\), Glasgow) Tj
+/F1 10 Tf 1 0 0 1 56 566 Tm (- Built Shelfwise, the stock forecasting dashboard used by independent grocery stores.) Tj
+/F1 10 Tf 1 0 0 1 56 551 Tm (- Introduced plain language explanations for every forecast, doubling accepted suggestions.) Tj
+/F1 10 Tf 1 0 0 1 56 536 Tm (- Mentored three junior engineers, two of whom now lead their own squads.) Tj
+/F2 11 Tf 1 0 0 1 56 514 Tm (Product Engineer, Fernwhistle Health \(2019 to 2021\), Edinburgh) Tj
+/F1 10 Tf 1 0 0 1 56 499 Tm (- Built the Clinic Queue check-in kiosk and waiting room screen for outpatient clinics.) Tj
+/F1 10 Tf 1 0 0 1 56 484 Tm (- Ran accessibility testing sessions with patients and reception staff before every release.) Tj
+/F2 11 Tf 1 0 0 1 56 462 Tm (Developer, Quillfern Labs \(2017 to 2019\), Dundee) Tj
+/F1 10 Tf 1 0 0 1 56 447 Tm (- Built experiment templates and the audit trail for Benchnote, a shared lab notebook.) Tj
+/F1 10 Tf 1 0 0 1 56 432 Tm (- Moved from part-time scripting to full product work within the first year.) Tj
+/F2 11 Tf 1 0 0 1 56 410 Tm (Graduate Civil Engineer, Lanternmoth Surveying \(2014 to 2017\), Aberdeen) Tj
+/F1 10 Tf 1 0 0 1 56 395 Tm (- Worked on drainage and small bridge surveys, and wrote spreadsheet tools that the team still uses.) Tj
+/F2 14 Tf 1 0 0 1 56 367 Tm (Skills) Tj
+/F1 10 Tf 1 0 0 1 56 349 Tm (TypeScript, React Native, React, Next.js, PostgreSQL, SQLite, offline sync, accessibility,) Tj
+/F1 10 Tf 1 0 0 1 56 335 Tm (user research. Side projects in Rust, Python and SvelteKit.) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R /Info << /Title (Sample CV) >> >>
+startxref
+3155
+%%EOF

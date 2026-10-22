@@ -1,0 +1,87 @@
+{
+  "slug": "route-ledger",
+  "title": "Route Ledger",
+  "summary": "Offline-first route and proof-of-delivery app for a regional freight co-operative's drivers.",
+  "role": "Staff Product Engineer",
+  "year": 2025,
+  "yearRange": "2024 to now",
+  "category": "commercial",
+  "order": 0,
+  "coverImageUrl": "/projects/route-ledger/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "React Native",
+      "kind": "technology"
+    },
+    {
+      "name": "TypeScript",
+      "kind": "technology"
+    },
+    {
+      "name": "SQLite",
+      "kind": "technology"
+    },
+    {
+      "name": "Offline-first",
+      "kind": "technology"
+    },
+    {
+      "name": "Logistics",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Saltmarsh Transit Co. runs about ninety vans across rural Scotland, where mobile signal drops out for most of a shift. Drivers worked from printed manifests and phoned the depot when something changed."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Odile led a team of four to replace the paper with Route Ledger, a React Native app that keeps the whole day's route, stops and signatures on the device in SQLite and syncs whenever a signal appears."
+      }
+    },
+    {
+      "type": "image",
+      "data": {
+        "url": "/projects/route-ledger/screen.svg",
+        "alt": "Route Ledger stop list with sync status",
+        "caption": "The stop list shows what is saved on the phone and what has reached the depot."
+      }
+    },
+    {
+      "type": "heading",
+      "data": {
+        "text": "Sync without surprises"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Every change is written to a local queue first, then replayed to the server in order. Conflicts (two people editing the same stop) are resolved per field, and the driver always sees which version won and why."
+      }
+    },
+    {
+      "type": "code",
+      "data": {
+        "language": "ts",
+        "code": "type QueuedChange = {\n  id: string;\n  stopId: string;\n  field: \"status\" | \"signature\" | \"note\";\n  value: string;\n  changedAt: number;\n};\n\nexport async function replay(queue: QueuedChange[]) {\n  for (const change of queue.sort((a, b) => a.changedAt - b.changedAt)) {\n    await api.applyChange(change);\n  }\n}"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "After a year in service, missed delivery slots fell by 38% and the depot has not lost a single proof of delivery, including through two winters of storms."
+      }
+    }
+  ]
+}

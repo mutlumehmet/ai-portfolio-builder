@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "saltmarsh-transit",
+    "title": "Staff Product Engineer",
+    "company": "Saltmarsh Transit Co.",
+    "location": "Edinburgh (hybrid)",
+    "startDate": "2024-03-01",
+    "endDate": null,
+    "highlights": [
+      "Leads product engineering for the driver and depot apps used across a regional freight co-operative.",
+      "Designed the offline sync queue behind Route Ledger, which has not lost a proof of delivery since launch.",
+      "Runs a fortnightly ride-along programme so engineers spend a shift with a driver."
+    ]
+  },
+  {
+    "slug": "brindlecart",
+    "title": "Senior Product Engineer",
+    "company": "Brindlecart",
+    "location": "Glasgow",
+    "startDate": "2021-06-01",
+    "endDate": "2024-02-29",
+    "highlights": [
+      "Built Shelfwise, the stock forecasting dashboard used by independent grocery stores.",
+      "Introduced plain language explanations for every forecast, doubling accepted suggestions.",
+      "Mentored three junior engineers, two of whom now lead their own squads."
+    ]
+  },
+  {
+    "slug": "fernwhistle-health",
+    "title": "Product Engineer",
+    "company": "Fernwhistle Health",
+    "location": "Edinburgh",
+    "startDate": "2019-04-01",
+    "endDate": "2021-05-31",
+    "highlights": [
+      "Built the Clinic Queue check-in kiosk and waiting room screen for outpatient clinics.",
+      "Ran accessibility testing sessions with patients and reception staff before every release."
+    ]
+  },
+  {
+    "slug": "quillfern-labs",
+    "title": "Developer",
+    "company": "Quillfern Labs",
+    "location": "Dundee",
+    "startDate": "2017-02-01",
+    "endDate": "2019-03-31",
+    "highlights": [
+      "Built experiment templates and the audit trail for Benchnote, a shared lab notebook.",
+      "Moved from part-time scripting to full product work within the first year."
+    ]
+  },
+  {
+    "slug": "lanternmoth-surveying",
+    "title": "Graduate Civil Engineer",
+    "company": "Lanternmoth Surveying",
+    "location": "Aberdeen",
+    "startDate": "2014-09-01",
+    "endDate": "2017-01-31",
+    "highlights": [
+      "Worked on drainage and small bridge surveys, and wrote spreadsheet tools that the team still uses."
+    ]
+  }
+]

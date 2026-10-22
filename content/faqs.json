@@ -1,0 +1,34 @@
+[
+  {
+    "question": "Where is Odile based?",
+    "answer": "Edinburgh, Scotland. Odile works hybrid and is happy to travel within the UK for workshops and user research."
+  },
+  {
+    "question": "Is Odile open to new roles?",
+    "answer": "Odile is open to conversations about staff or lead product engineering roles, especially in logistics, healthcare or anything that has to work offline."
+  },
+  {
+    "question": "What does Odile mean by offline-first?",
+    "answer": "The app treats the phone as the main copy of the data and the server as something it syncs with when it can, so losing signal never stops anyone working."
+  },
+  {
+    "question": "Which technologies does Odile use most?",
+    "answer": "TypeScript every day, with React Native for mobile, React or Next.js for web, and PostgreSQL or SQLite for data. Side projects are where Rust, Python and SvelteKit come in."
+  },
+  {
+    "question": "Does Odile do design work?",
+    "answer": "Odile is not a visual designer, but runs user research sessions, sketches flows and works closely with designers from the first workshop."
+  },
+  {
+    "question": "What did Odile do before software?",
+    "answer": "Three years as a graduate civil engineer, surveying drainage and small bridges. The spreadsheet tools written there were the first step into software."
+  },
+  {
+    "question": "Does Odile manage people?",
+    "answer": "Odile has mentored engineers for several years and leads small teams as a staff engineer, but prefers a hands-on role over pure line management."
+  },
+  {
+    "question": "How do I get in touch?",
+    "answer": "Use the email link at the top of the page. Odile usually replies within a couple of working days."
+  }
+]

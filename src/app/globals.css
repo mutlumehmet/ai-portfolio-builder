@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-dm-sans);
+
+  /* Five accent tints (theme.accents in site.config.ts), used for card covers */
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-accent-4: var(--accent-4);
+  --color-accent-5: var(--accent-5);
+
+  /* Hard offset shadow in the neobrutalism.dev style, as a Tailwind shadow-* utility */
+  --shadow-brutal: var(--shadow-x) var(--shadow-y) 0px 0px var(--border);
+  --shadow-brutal-sm: 2px 2px 0px 0px var(--border);
+  --shadow-brutal-lg: 6px 6px 0px 0px var(--border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Default palette. The values in site.config.ts (theme) are injected by
+     src/app/layout.tsx and win over these, so edit the config, not this file. */
+  --accent-1: #3451d1;
+  --accent-2: #ffd84d;
+  --accent-3: #1f9e6e;
+  --accent-4: #b9a6ff;
+  --accent-5: #7cc8f2;
+
+  /* Neo-brutalist structure (thick borders, hard shadows), after neobrutalism.dev */
+  --radius: 5px;
+  --shadow-x: 4px;
+  --shadow-y: 4px;
+
+  --background: #fbf8ef;
+  --foreground: #16161d;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #3451d1;
+  --primary-foreground: #ffffff;
+  --secondary: #ffd84d;
+  --secondary-foreground: #16161d;
+  --muted: #efebdf;
+  --muted-foreground: #5e5b66;
+  --accent: #1f9e6e;
+  --accent-foreground: #ffffff;
+  --destructive: #c4372f;
+  --border: #000;
+  --input: #000;
+  --ring: #000;
+  --chart-1: var(--accent-1);
+  --chart-2: var(--accent-2);
+  --chart-3: var(--accent-3);
+  --chart-4: var(--accent-4);
+  --chart-5: var(--accent-5);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--secondary-foreground);
+  --sidebar-border: #000;
+  --sidebar-ring: #000;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Tailwind stopped setting this on buttons by default (unlike <a href>,
+     which browsers give a pointer cursor for free), so restore it app-wide
+     rather than adding cursor-pointer to every interactive component. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}

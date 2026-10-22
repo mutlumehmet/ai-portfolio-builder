@@ -1,0 +1,46 @@
+{
+  "slug": "bus-stop-barometer",
+  "title": "Bus Stop Barometer",
+  "summary": "E-ink display by the front door showing the next buses and whether to take an umbrella.",
+  "role": "Solo project",
+  "year": 2023,
+  "category": "personal",
+  "order": 1,
+  "repoUrl": "https://github.com/example/bus-stop-barometer",
+  "coverImageUrl": "/projects/bus-stop-barometer/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "Python",
+      "kind": "technology"
+    },
+    {
+      "name": "Raspberry Pi",
+      "kind": "technology"
+    },
+    {
+      "name": "Hardware",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "A small e-ink screen on a Raspberry Pi that refreshes every two minutes with the next three buses from the nearest stop and a one word weather verdict."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "The fun constraint was e-ink: slow refreshes and no colour meant designing a layout that is useful from across the hall in one glance."
+      }
+    }
+  ]
+}

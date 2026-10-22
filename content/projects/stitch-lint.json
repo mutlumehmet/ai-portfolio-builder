@@ -1,0 +1,53 @@
+{
+  "slug": "stitch-lint",
+  "title": "Stitch Lint",
+  "summary": "Command line tool that checks knitting patterns for stitch count mistakes.",
+  "role": "Solo project",
+  "year": 2022,
+  "category": "personal",
+  "order": 2,
+  "repoUrl": "https://github.com/example/stitch-lint",
+  "coverImageUrl": "/projects/stitch-lint/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "Rust",
+      "kind": "technology"
+    },
+    {
+      "name": "CLI",
+      "kind": "technology"
+    },
+    {
+      "name": "Crafts",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Knitting patterns are tiny programs, and they have bugs. Stitch Lint parses a written pattern, counts stitches row by row, and flags any row where the numbers do not add up."
+      }
+    },
+    {
+      "type": "code",
+      "data": {
+        "language": "sh",
+        "code": "$ stitch-lint scarf.txt\nrow 14: expected 42 stitches, pattern gives 41\n  hint: \"k2tog\" twice in the repeat, but only one \"yo\""
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "It started as a way to learn Rust and ended up in a few knitting forums, which is still the most surprising user group Odile has had."
+      }
+    }
+  ]
+}

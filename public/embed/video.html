@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Video</title>
+<!-- A plain player for the page's embed block: a self-hosted MP4 with its poster and controls.
+     Nothing plays until the reader presses play (a raw MP4 in an iframe can autoplay in Chrome).
+     Usage: /embed/video.html?src=/projects/<slug>/film.mp4&poster=/projects/<slug>/film.png -->
+<style>
+  html, body { margin: 0; height: 100%; background: #000; }
+  video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+</style>
+</head>
+<body>
+<video id="v" controls playsinline preload="none"></video>
+<script>
+  // only this site's own project files
+  const q = new URLSearchParams(location.search)
+  const own = s => s && /^\/projects\/[a-z0-9-]+\/[\w.-]+$/.test(s)
+  const v = document.getElementById('v')
+  if (own(q.get('src'))) v.src = q.get('src')
+  if (own(q.get('poster'))) v.poster = q.get('poster')
+</script>
+</body>
+</html>

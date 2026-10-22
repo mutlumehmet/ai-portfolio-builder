@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  // pgvector powers the chat's semantic search (the Chunk table below). The
+  // init migration creates the extension, so nothing needs enabling by hand.
+  // Connection URL lives in prisma.config.ts (Prisma 7 convention), not here.
+  extensions = [vector]
+}
+
+enum BlockType {
+  heading
+  paragraph
+  image
+  youtube
+  diagram
+  code
+  embed
+}
+
+enum TagKind {
+  technology
+  industry
+}
+
+// Declaration order matters: native Postgres enums sort by declaration
+// order, not alphabetically, so `orderBy: { category: "asc" }` puts
+// commercial work before personal work for free.
+enum ProjectCategory {
+  commercial
+  personal
+}
+
+model Project {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+  title         String
+  summary       String
+  coverImageUrl String?
+  liveUrl       String?
+  repoUrl       String?
+  role          String?
+  year          Int?
+  // Overrides the year badge display when set (e.g. "2023 to 2026" for
+  // ongoing or multi-year work); `year` alone stays numeric for sorting.
+  yearRange     String?
+  // Individual, possibly non-contiguous years of activity (e.g. [2021, 2023,
+  // 2025]), rendered as separate chips on the card. Takes priority over
+  // yearRange/year for display when non-empty; `year` still owns sorting.
+  years         Int[]           @default([])
+  category      ProjectCategory @default(commercial)
+  featured      Boolean         @default(false)
+  order         Int             @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  tags   Tag[]
+  blocks ContentBlock[]
+
+  @@index([featured, order])
+}
+
+model ContentBlock {
+  id        String    @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order     Int
+  type      BlockType
+  // Shape depends on `type`, e.g. { text } for heading/paragraph,
+  // { url, alt, caption } for image, { videoId } for youtube.
+  data      Json
+
+  @@index([projectId, order])
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  kind     TagKind
+  projects Project[]
+
+  @@index([kind])
+}
+
+// Same block model as Project, so work-history content is structured the
+// same way and can be used as RAG context.
+model Experience {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  title     String
+  company   String
+  // Free text, e.g. "Edinburgh" or "Remote (UK)", not a structured location.
+  location  String?
+  startDate DateTime
+  endDate   DateTime?
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  blocks ExperienceBlock[]
+}
+
+model ExperienceBlock {
+  id           String     @id @default(cuid())
+  experienceId String
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  order        Int
+  type         BlockType
+  data         Json
+
+  @@index([experienceId, order])
+}
+
+// Plain question/answer pairs, not the block model: FAQ answers are single
+// short paragraphs, so a block editor would be overkill here.
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// The RAG search index (chat, fit check, MCP). Derived from
+// Project/Experience/Faq content by scripts/ingest.ts; never hand-edited.
+// Not tied to any one source table (sourceId is nullable) so a future
+// non-DB source, like a parsed CV document, can also write rows here.
+//
+// `embedding` uses Prisma's Unsupported(...) escape hatch since Prisma has
+// no native pgvector type; see prisma/migrations/0001_init/migration.sql
+// for the actual column definition. Dimension is 1536, matching OpenAI's
+// text-embedding-3-small output size. A different EMBEDDING_MODEL with
+// another size needs this number changed here and in a new migration.
+model Chunk {
+  id         String   @id @default(cuid())
+  sourceType String
+  sourceId   String?
+  content    String
+  embedding  Unsupported("vector(1536)")?
+  createdAt  DateTime @default(now())
+
+  @@index([sourceType, sourceId])
+}

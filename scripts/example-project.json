@@ -1,0 +1,27 @@
+{
+  "slug": "example-project",
+  "title": "Example Project",
+  "summary": "One or two sentence summary shown on the gallery card.",
+  "coverImageUrl": "https://example.com/cover.jpg",
+  "liveUrl": "https://example.com (optional, live site link shown on the project detail page)",
+  "repoUrl": "https://github.com/you/repo (optional, source code link for open source work)",
+  "role": "Frontend Developer",
+  "year": 2024,
+  "yearRange": "2023 to 2026 (optional, overrides the year badge display, ignored if years is set)",
+  "years": [2021, 2023, 2025],
+  "category": "commercial",
+  "featured": true,
+  "order": 10,
+  "tags": [
+    { "name": "React", "kind": "technology" },
+    { "name": "FinTech", "kind": "industry" }
+  ],
+  "blocks": [
+    { "type": "heading", "data": { "text": "Overview" } },
+    { "type": "paragraph", "data": { "text": "What the project is, what I built, and my role." } },
+    { "type": "image", "data": { "url": "https://example.com/screenshot.jpg", "alt": "Product screenshot", "caption": "Optional caption" } },
+    { "type": "youtube", "data": { "videoId": "dQw4w9WgXcQ", "caption": "Optional demo walkthrough" } },
+    { "type": "embed", "data": { "url": "https://www.loom.com/embed/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "aspectRatio": "16:9", "caption": "Optional caption (use the provider's embed URL, not the page link; aspectRatio is one of 16:9, 1:1, 4:3, defaults to 16:9)" } },
+    { "type": "code", "data": { "language": "tsx", "code": "function Example() {\n  return <div />;\n}" } }
+  ]
+}

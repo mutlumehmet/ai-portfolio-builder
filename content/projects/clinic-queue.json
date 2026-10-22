@@ -1,0 +1,63 @@
+{
+  "slug": "clinic-queue",
+  "title": "Clinic Queue",
+  "summary": "Self check-in kiosk and live queue screen for busy outpatient clinics.",
+  "role": "Product Engineer",
+  "year": 2020,
+  "category": "commercial",
+  "order": 2,
+  "coverImageUrl": "/projects/clinic-queue/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "React",
+      "kind": "technology"
+    },
+    {
+      "name": "TypeScript",
+      "kind": "technology"
+    },
+    {
+      "name": "Accessibility",
+      "kind": "technology"
+    },
+    {
+      "name": "Healthcare",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "At Fernwhistle Health, Odile built the check-in kiosk and waiting room screen used in outpatient clinics. Patients scan their appointment letter, confirm two details and take a seat."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "The kiosk was designed with patients and reception staff in the room: large type, high contrast, one question per screen, and a clear way to ask a human for help at every step."
+      }
+    },
+    {
+      "type": "image",
+      "data": {
+        "url": "/projects/clinic-queue/screen.svg",
+        "alt": "Clinic Queue kiosk screen with a single large question",
+        "caption": "One question per screen, readable from a wheelchair."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Median check-in time dropped from eleven minutes at the front desk to four, and reception staff got time back for the patients who needed them."
+      }
+    }
+  ]
+}

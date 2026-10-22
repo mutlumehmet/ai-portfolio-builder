@@ -1,0 +1,59 @@
+{
+  "slug": "allotment-planner",
+  "title": "Allotment Planner",
+  "summary": "Free web app that plans crop rotation for community garden plots, season by season.",
+  "role": "Solo project",
+  "year": 2024,
+  "category": "personal",
+  "order": 0,
+  "liveUrl": "https://example.com",
+  "repoUrl": "https://github.com/example/allotment-planner",
+  "coverImageUrl": "/projects/allotment-planner/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "SvelteKit",
+      "kind": "technology"
+    },
+    {
+      "name": "TypeScript",
+      "kind": "technology"
+    },
+    {
+      "name": "Offline-first",
+      "kind": "technology"
+    },
+    {
+      "name": "Gardening",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "A weekend project for the community garden two streets away. Plot holders draw their beds, pick what they want to grow, and the planner suggests a four year rotation that keeps soil healthy."
+      }
+    },
+    {
+      "type": "image",
+      "data": {
+        "url": "/projects/allotment-planner/screen.svg",
+        "alt": "Allotment Planner grid with crop families colour coded",
+        "caption": "Crop families get a colour each, so a rotation reads at a glance."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "It works offline in a browser, because the garden has no signal, and stores everything on the device. More than 120 plots have been planned with it."
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "slug": "shelfwise",
+  "title": "Shelfwise",
+  "summary": "Stock forecasting dashboard that tells small grocery stores what to reorder before the weekly delivery.",
+  "role": "Senior Product Engineer",
+  "year": 2023,
+  "years": [
+    2022,
+    2023
+  ],
+  "category": "commercial",
+  "order": 1,
+  "coverImageUrl": "/projects/shelfwise/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "Next.js",
+      "kind": "technology"
+    },
+    {
+      "name": "TypeScript",
+      "kind": "technology"
+    },
+    {
+      "name": "PostgreSQL",
+      "kind": "technology"
+    },
+    {
+      "name": "Data visualisation",
+      "kind": "technology"
+    },
+    {
+      "name": "Retail",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Brindlecart supplies independent grocery stores. Store managers ordered stock from memory, which meant empty shelves on Fridays and wasted fresh produce on Mondays."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Odile built Shelfwise, a Next.js dashboard that turns till data into a short reorder list per supplier, with a confidence band so managers can see when the forecast is a guess."
+      }
+    },
+    {
+      "type": "image",
+      "data": {
+        "url": "/projects/shelfwise/screen.svg",
+        "alt": "Shelfwise reorder list with forecast bands",
+        "caption": "Each line shows the suggested quantity and how sure the model is."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "The hardest part was trust: early versions were accurate but ignored. Adding a plain sentence explaining each suggestion (\"sold 14 last week, a bank holiday is coming\") doubled the number of suggestions accepted."
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "slug": "benchnote",
+  "title": "Benchnote",
+  "summary": "Shared lab notebook for small research teams, with templates for repeat experiments.",
+  "role": "Developer",
+  "year": 2018,
+  "category": "commercial",
+  "order": 3,
+  "coverImageUrl": "/projects/benchnote/cover.svg",
+  "featured": true,
+  "tags": [
+    {
+      "name": "Vue",
+      "kind": "technology"
+    },
+    {
+      "name": "Node.js",
+      "kind": "technology"
+    },
+    {
+      "name": "PostgreSQL",
+      "kind": "technology"
+    },
+    {
+      "name": "Life sciences",
+      "kind": "industry"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "data": {
+        "text": "Overview"
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Quillfern Labs made software for university research groups. Benchnote replaced a mix of paper notebooks and spreadsheets with one shared notebook per project."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "Odile built the experiment templates and the audit trail: every entry is versioned, and nothing can be deleted, only struck through with a reason, as lab rules require."
+      }
+    },
+    {
+      "type": "paragraph",
+      "data": {
+        "text": "This was the project where Odile moved from writing spreadsheet macros to building full products, and learned to sit with users before writing code."
+      }
+    }
+  ]
+}
