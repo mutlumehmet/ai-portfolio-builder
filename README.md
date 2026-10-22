@@ -1,6 +1,5 @@
 # AI Portfolio Starter
 
-<!-- Banner to be rendered: docs/images/banner.png -->
 ![AI Portfolio Starter banner](docs/images/banner.png)
 
 **An open source portfolio site for developers and designers, with an AI assistant that answers questions about your work, a job-fit check for recruiters, and an MCP server, all grounded in your own content.**
@@ -22,8 +21,7 @@ Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to V
 
 ## How it works
 
-<!-- Diagram to be rendered: docs/images/how-it-works.png -->
-![How it works](docs/images/how-it-works.png)
+![How it works: your content goes into Postgres, rag:ingest turns it into embeddings, and the chat, the fit check and the MCP server answer only from the closest chunks](docs/images/how-it-works.gif)
 
 1. Your content (projects, experience, FAQs) lives in Postgres. You load it from the JSON files in `content/` or edit it in `/admin`.
 2. `npm run rag:ingest` splits that content into short chunks, turns each into an embedding (a list of 1536 numbers that captures its meaning) with OpenAI, and stores them in a pgvector column.
@@ -187,4 +185,6 @@ Code: [MIT](LICENSE). Sample content (everything in `content/`, the sample CV, a
 
 ## About
 
-Made by Mehmet Mutlu. <!-- Author line and links to be completed. -->
+[![Mehmet Mutlu: work that's shipped, at mehmetmutlu.dev](docs/images/site-banner.png)](https://www.mehmetmutlu.dev)
+
+Made by Mehmet Mutlu, [mehmetmutlu.dev](https://www.mehmetmutlu.dev). If it helps you, you can support it on [GitHub Sponsors](https://github.com/sponsors/mutlumehmet) or [Buy Me a Coffee](https://buymeacoffee.com/mutlumehmet).

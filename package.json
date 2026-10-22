@@ -1,6 +1,10 @@
 {
   "name": "ai-portfolio-starter",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mutlumehmet/ai-portfolio-starter"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
