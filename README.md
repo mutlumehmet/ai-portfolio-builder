@@ -2,24 +2,113 @@
 
 ![AI Portfolio Starter banner](docs/images/banner.png)
 
-**An open source portfolio site for developers and designers, with an AI assistant that answers questions about your work, a job-fit check for recruiters, and an MCP server, all grounded in your own content.**
+**A complete portfolio website for developers and designers, plus an optional AI layer that answers questions about your work from your own content.**
 
-Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see everything working before you add your own content.
+Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see every page working before you add your own content.
 
-## Features
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
-| Feature | What it does | Default |
-|---|---|---|
-| Portfolio pages | Home, work, side projects, project pages built from content blocks (text, images, code, video, embeds), experience timeline, FAQ | Always on |
-| AI chat (RAG) | Visitors ask questions; answers come only from your projects, experience and FAQs (retrieval augmented generation over pgvector) | On |
-| Job-fit check | Recruiters paste a job description (or upload PDF, .docx or .txt) and get a verdict, strengths and gaps | On |
-| MCP server | `/api/mcp` exposes the chat, the fit check and your CV link to any MCP client | On |
-| Admin panel | Password protected `/admin` to edit projects, tags, FAQs and experience; the search index updates itself | On |
-| CV download | `/cv` serves `public/cv.pdf` with a dated file name | On |
-| Rate limiting | Per-IP limits on every AI endpoint | On |
-| Canned answers | Fixed replies for chosen questions, checked before the AI is called | Off |
+## Ready to deploy
 
-## How it works
+Everything is already done for you.
+
+| Built in | What you get |
+|---|---|
+| **One-click deploy** | The Vercel button copies the repo and creates a free Neon database for you. |
+| **Self-setup database** | The first deploy runs the migrations, loads the sample content and builds the search index. |
+| **Postgres with pgvector** | The first migration creates the `vector` extension, so there is nothing to enable by hand. |
+| **Admin panel** | Edit projects, tags, FAQs and experience in the browser at `/admin`. |
+| **Security** | Every admin action checks the session, login attempts are limited, and AI inputs have length caps. |
+| **Rate limits** | Per-IP limits on every AI endpoint. |
+| **Feature flags** | Switch any part off in `site.config.ts` or with an environment variable. |
+| **Optional AI layer** | Switch the chat, the fit check and the MCP server off and you have a plain portfolio. |
+
+## What's inside
+
+The portfolio is a full site on its own. These are its pages, shown with the sample content.
+
+<table>
+<tr>
+<td valign="top" width="50%">
+<a href="src/app/page.tsx"><img src="docs/images/screens/home.png" width="360" alt="Home page: hero with headline, photo and buttons, then a row of impact numbers"></a><br>
+<b>Home</b>: your headline, intro, photo, impact numbers and career journey, then featured work, side projects and the FAQ. The text comes from <code>site.config.ts</code>; the projects and FAQs come from the database.
+</td>
+<td valign="top" width="50%">
+<a href="src/app/projects/page.tsx"><img src="docs/images/screens/work.png" width="360" alt="Selected work page: technology and industry filters above project cards with covers"></a><br>
+<b>Selected work</b> (<code>/projects</code>): every project as a card with its cover and tags, paid work first. Visitors filter by technology or industry.
+</td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+<a href="src/app/projects/%5Bslug%5D/page.tsx"><img src="docs/images/screens/project-page.png" width="360" alt="Project page: role, years, tags, an overview and a large image"></a><br>
+<b>Project page</b> (<code>/projects/&lt;slug&gt;</code>): a case study built from content blocks (text, images, code, video and embeds). Each project is one JSON file in <code>content/projects/</code> or one entry in <code>/admin</code>.
+</td>
+<td valign="top" width="50%">
+<a href="src/app/side-projects/page.tsx"><img src="docs/images/screens/side-projects.png" width="360" alt="Side projects page: filters and project cards with code and live site icons"></a><br>
+<b>Side projects</b> (<code>/side-projects</code>): the same list with personal projects first, each with links to its code and live site.
+</td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+<a href="src/app/experience/page.tsx"><img src="docs/images/screens/experience.png" width="360" alt="Experience page: a vertical timeline of roles with dates, places and bullet points"></a><br>
+<b>Experience</b> (<code>/experience</code>): a timeline of your roles with dates, places and highlights, from <code>content/experience.json</code> or <code>/admin</code>.
+</td>
+<td valign="top" width="50%">
+<a href="content/faqs.json"><img src="docs/images/screens/faq.png" width="360" alt="FAQ section: a list of collapsible questions"></a><br>
+<b>FAQ</b>: questions visitors ask most, as an accordion on the home page. They come from <code>content/faqs.json</code> or <code>/admin</code>.
+</td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+<a href="src/app/cv/route.ts"><img src="docs/images/screens/cv.png" width="360" alt="A dark call to action box with a Download CV button"></a><br>
+<b>CV download</b>: buttons in the header and on the home page. <code>/cv</code> serves <code>public/cv.pdf</code> with a dated file name.
+</td>
+<td valign="top" width="50%">
+<a href="src/app/admin"><img src="docs/images/screens/admin.png" width="360" alt="Admin panel: a list of projects with edit, delete and reorder buttons"></a><br>
+<b>Admin panel</b> (<code>/admin</code>): a password protected editor for projects, tags, FAQs and experience. Add, edit, reorder and delete without touching code.
+</td>
+</tr>
+</table>
+
+## How the portfolio works
+
+| Part | Where it lives |
+|---|---|
+| Projects, experience, FAQs, tags | Postgres. Loaded from the JSON files in `content/` with `npm run db:seed`, or edited in `/admin`. |
+| Name, hero text, stats, journey, colours, contact links | `site.config.ts`, one file for everything person-specific. |
+| Images | `public/`, with project images in `public/projects/<slug>/`. |
+| CV | `public/cv.pdf`. |
+
+Pages render on request, so an edit in `/admin` or a content script shows up on the next page load, with no rebuild. Details are in [Make it yours](#make-it-yours).
+
+## The AI layer (optional)
+
+The AI layer is optional. Each part has its own [feature flag](#feature-flags); switch all three off and you have a plain portfolio.
+
+On the home page, visitors and recruiters get one panel with three tabs:
+
+<table>
+<tr>
+<td valign="top" width="50%">
+<a href="src/components/chat-panel.tsx"><img src="docs/images/screens/ai-chat.png" width="360" alt="Chat tab: suggested questions above a message box"></a><br>
+<b>Chat</b>: visitors ask about your work and get answers taken only from your projects, experience and FAQs. Suggested questions come from <code>site.config.ts</code>.
+</td>
+<td valign="top" width="50%">
+<a href="src/components/fit-check-panel.tsx"><img src="docs/images/screens/ai-fit-check.png" width="360" alt="Fit check tab: a box to paste a job description and an upload button"></a><br>
+<b>Fit check</b>: a recruiter pastes a job description (or uploads a PDF, .docx or .txt) and gets a verdict, strengths and gaps based on your content.
+</td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+<a href="src/components/mcp-panel.tsx"><img src="docs/images/screens/ai-mcp.png" width="360" alt="MCP tab: the server URL and a copyable Claude Code command"></a><br>
+<b>MCP server</b>: the site is also a remote MCP server, so an AI assistant such as Claude Code can ask about you, check a job fit and fetch your CV. See <a href="#mcp-usage">MCP usage</a>.
+</td>
+<td valign="top" width="50%">
+</td>
+</tr>
+</table>
+
+### How the AI layer works
 
 ![How it works: your content goes into Postgres, rag:ingest turns it into embeddings, and the chat, the fit check and the MCP server answer only from the closest chunks](docs/images/how-it-works.gif)
 
@@ -33,9 +122,7 @@ Admin edits and the content scripts re-sync the index automatically. Only change
 
 ## Deploy in one click
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
-
-The button copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your OpenAI API key, a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
+The [Deploy with Vercel](#ai-portfolio-starter) button at the top copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your OpenAI API key, a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
 
 ## Quick start
 
