@@ -8,6 +8,8 @@
 // Feature flags can also be switched per deployment with environment
 // variables (see .env.example), which win over the values below.
 
+import { themes } from "./themes";
+
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -55,22 +57,12 @@ export const siteConfig = {
   },
 
   // Colours for the whole site. The neo-brutalist structure (thick borders,
-  // hard shadows) stays; these only change the hues.
-  theme: {
-    background: "#fbf8ef",
-    foreground: "#16161d",
-    card: "#ffffff",
-    muted: "#efebdf",
-    mutedForeground: "#5e5b66",
-    primary: "#3451d1",
-    primaryForeground: "#ffffff",
-    secondary: "#ffd84d",
-    secondaryForeground: "#16161d",
-    accent: "#1f9e6e",
-    accentForeground: "#ffffff",
-    // Five tints for project cards without a cover image.
-    accents: ["#3451d1", "#ffd84d", "#1f9e6e", "#b9a6ff", "#7cc8f2"],
-  },
+  // hard shadows) stays; the theme only changes the hues. Ready-made themes:
+  // block, cobalt, coral, burst, twist, mint, playful, nature, earthy, and the
+  // pastels peach, lavender and sky, and the neutrals stone, sand, slate and
+  // graphite (see themes.ts). To change single colours:
+  // theme: { ...themes.block, primary: "#2244dd" },
+  theme: themes.block,
 
   hero: {
     badge: "Product Engineer",

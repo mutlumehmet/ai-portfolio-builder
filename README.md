@@ -20,6 +20,7 @@ Everything is already done for you.
 | **Admin panel** | Edit projects, tags, FAQs and experience in the browser at `/admin`. |
 | **Security** | Every admin action checks the session, login attempts are limited, and AI inputs have length caps. |
 | **Rate limits** | Per-IP limits on every AI endpoint. |
+| **Colour themes** | Ready-made [colour themes](#colour-themes), including pastels, switched with one line. |
 | **Feature flags** | Switch any part off in `site.config.ts` or with an environment variable. |
 | **Optional AI layer** | Switch the chat, the fit check and the MCP server off and you have a plain portfolio. |
 
@@ -75,7 +76,7 @@ The portfolio is a full site on its own. These are its pages, shown with the sam
 | Part | Where it lives |
 |---|---|
 | Projects, experience, FAQs, tags | Postgres. Loaded from the JSON files in `content/` with `npm run db:seed`, or edited in `/admin`. |
-| Name, hero text, stats, journey, colours, contact links | `site.config.ts`, one file for everything person-specific. |
+| Name, hero text, stats, journey, colour theme, contact links | `site.config.ts`, one file for everything person-specific. |
 | Images | `public/`, with project images in `public/projects/<slug>/`. |
 | CV | `public/cv.pdf`. |
 
@@ -198,12 +199,18 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 
 ## Make it yours
 
-1. **`site.config.ts`** holds everything person-specific: name, initials, role, contact, socials, hero text, stats, journey, colours, chat persona and suggestions, fit-check criteria, MCP server name, CV file name, admin label, SEO and feature flags. Start here.
+1. **`site.config.ts`** holds everything person-specific: name, initials, role, contact, socials, hero text, stats, journey, colour theme (see [Colour themes](#colour-themes)), chat persona and suggestions, fit-check criteria, MCP server name, CV file name, admin label, SEO and feature flags. Start here.
 2. **`content/`** holds the sample content. Replace `content/projects/*.json` (same shape as `scripts/example-project.json`), `content/experience.json` and `content/faqs.json`, then run `npm run db:seed` and `npm run rag:ingest`. The seed upserts by slug, so remove the sample projects in `/admin` or with `npm run project:delete -- <slug>`.
 3. **Images** go in `public/`. Project images live in `public/projects/<slug>/`; their sizes are measured at install and build time so covers of the right shape fill their card. Replace `public/avatar.svg` with your photo (and update `person.photo`).
 4. **CV:** replace `public/cv.pdf` with your own.
 5. **`/admin`** lets you edit all content in the browser once deployed. Every save updates the chat's search index in the background.
 6. **Single projects from the command line:** `npm run project:upsert -- path/to/project.json`.
+
+### Colour themes
+
+![Ready-made colour themes, each shown as a small card with a headline, buttons and its palette](docs/images/themes.png)
+
+Pick a theme in `site.config.ts` with one line, for example `theme: themes.coral`. The themes live in `themes.ts`. To change single colours, spread a theme and override what you need: `theme: { ...themes.block, primary: "#2244dd" }`. Every button colour in the ready-made themes passes WCAG AA contrast (text stays readable on it).
 
 ## Feature flags
 
@@ -276,6 +283,7 @@ docker-compose.yml    local Postgres with pgvector
 
 * [shadcn/ui](https://ui.shadcn.com) for the UI primitives in `src/components/ui/` (MIT).
 * [neobrutalism.dev](https://www.neobrutalism.dev) ([neobrutalism-components](https://github.com/ekmas/neobrutalism-components), MIT, by Samuel Breznjak) for the neo-brutalist border, shadow and radius structure.
+* Several themes are adapted from the [neobrutalism palettes collected on colorany.com](https://colorany.com/color-palettes/neobrutalism-color-palettes/).
 * [Simple Icons](https://simpleicons.org) for the GitHub mark (CC0).
 * DM Sans and Geist Mono fonts (SIL Open Font License), via `next/font`.
 * Built on Next.js, React, Prisma, pgvector, Tailwind CSS, OpenAI, mcp-handler, unpdf and mammoth.
