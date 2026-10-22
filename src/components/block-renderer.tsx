@@ -32,7 +32,7 @@ function Paragraph({ data }: { data: unknown }) {
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-all font-bold text-primary underline underline-offset-2"
+            className="break-all font-bold text-link underline underline-offset-2"
           >
             {part}
           </a>

@@ -210,7 +210,7 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 
 ![Ready-made colour themes, each shown as a small card with a headline, buttons and its palette](docs/images/themes.png)
 
-Pick a theme in `site.config.ts` with one line, for example `theme: themes.slate`. Coral is the default. The themes live in `themes.ts`. To change single colours, spread a theme and override what you need: `theme: { ...themes.coral, primary: "#b83a22" }`. Every button colour in the ready-made themes passes WCAG AA contrast (text stays readable on it).
+Pick a theme in `site.config.ts` with one line, for example `theme: themes.slate`. Mint is the default. The themes live in `themes.ts`. To change single colours, spread a theme and override what you need: `theme: { ...themes.mint, primary: "#2f9e75" }`. Every button colour in the ready-made themes passes WCAG AA contrast (text stays readable on it). Links and highlighted words use a deeper shade of your primary colour, worked out at build time, so they stay readable even with light or pastel colours and your own custom values.
 
 ## Feature flags
 

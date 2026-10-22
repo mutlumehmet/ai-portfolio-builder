@@ -147,7 +147,7 @@ export default async function Home() {
                 {stat.href && (
                   <Link
                     href={stat.href}
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-link hover:underline"
                   >
                     Learn more →
                   </Link>
@@ -205,7 +205,7 @@ export default async function Home() {
                 key={step.period}
                 className={`${i > 0 ? "md:border-l-2 md:border-border md:pl-8" : ""}`}
               >
-                <span className="text-lg font-black text-primary">{step.period}</span>
+                <span className="text-lg font-black text-link">{step.period}</span>
                 <p className="mt-2 text-muted-foreground">{step.description}</p>
               </div>
             ))}
@@ -213,7 +213,7 @@ export default async function Home() {
 
           <Link
             href="/experience"
-            className="mt-6 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline"
+            className="mt-6 inline-flex items-center gap-1 text-sm font-bold text-link hover:underline"
           >
             See full experience →
           </Link>

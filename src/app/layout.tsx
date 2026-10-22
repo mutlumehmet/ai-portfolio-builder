@@ -3,6 +3,7 @@ import { DM_Sans, Geist_Mono } from "next/font/google";
 
 import { siteConfig, siteUrl } from "@/lib/config";
 
+import { readableOn } from "@/lib/contrast";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -46,6 +47,8 @@ const themeCss = `:root{${[
   ["--muted-foreground", theme.mutedForeground],
   ["--primary", theme.primary],
   ["--primary-foreground", theme.primaryForeground],
+  // Links and highlighted words: the primary hue, darkened if needed to read on the background.
+  ["--link", readableOn(theme.primary, theme.background)],
   ["--secondary", theme.secondary],
   ["--secondary-foreground", theme.secondaryForeground],
   ["--accent", theme.accent],
