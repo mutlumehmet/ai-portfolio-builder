@@ -31,6 +31,12 @@ Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to V
 
 Admin edits and the content scripts re-sync the index automatically. Only changed text is embedded again, so edits cost almost nothing.
 
+## Deploy in one click
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
+
+The button copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your OpenAI API key, a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
+
 ## Quick start
 
 You need Node.js 20 or newer and an OpenAI API key. Pick Neon (hosted) or Docker (local) for the database.
@@ -70,14 +76,22 @@ npm run dev
 
 Open http://localhost:3000.
 
-### Deploy to Vercel
+### Deploy to Vercel by hand
 
 1. Push your copy to GitHub and import it in Vercel.
-2. Add the environment variables from `.env` (at least `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `OPENAI_API_KEY`, and `NEXT_PUBLIC_SITE_URL` with your domain).
-3. Run the migration, seed and ingest once against the production database from your machine (point `DATABASE_URL` at it), or seed once and then manage content in `/admin`.
+2. Add the environment variables from `.env` (at least `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET` and `OPENAI_API_KEY`). `NEXT_PUBLIC_SITE_URL` is only needed for a custom domain; otherwise the Vercel production URL is used.
+3. Deploy. The first build prepares the database, as below.
 4. Before you share the link, follow the cost steps in [Cost and security](#cost-and-security).
 
-The build does not need a database: every page that reads content is rendered on request.
+### What happens on deploy
+
+Vercel runs `npm run vercel-build` (`scripts/vercel-build.ts`), which runs these steps before the normal build:
+
+1. `prisma migrate deploy`: creates or updates the tables and the `vector` extension. It uses `DATABASE_URL_UNPOOLED` when set (the Neon integration sets it), because migrations need a direct connection.
+2. Loads the sample content from `content/`, **only while the database has no projects**, so it never overwrites or brings back what you changed in `/admin`.
+3. `rag:ingest`: embeds only new or changed text, so a redeploy with no content changes costs nothing. If `OPENAI_API_KEY` is missing or wrong, the build still succeeds and prints a warning; fix the key and redeploy.
+
+Without `DATABASE_URL` the steps are skipped and only the site is built. `npm run build` never touches the database, so local builds work offline. If you use Vercel preview deployments with the same database as production, previews run the same migrations against it; Neon's integration can give each preview its own database branch instead.
 
 ## Environment variables
 

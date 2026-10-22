@@ -41,7 +41,11 @@ export const features = resolveFeatures();
 
 export type Features = typeof features;
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url).replace(/\/+$/, "");
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
+  siteConfig.url
+).replace(/\/+$/, "");
 
 export const chatModel = process.env.CHAT_MODEL || "gpt-4.1-mini";
 // The Chunk table stores 1536-dimension vectors. If you switch to a model with

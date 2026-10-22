@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && tsx scripts/cover-sizes.ts && next build",
+    "vercel-build": "tsx scripts/vercel-build.ts",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
