@@ -72,8 +72,8 @@ export function ExperienceList({ experiences }: { experiences: ExperienceRow[] }
   return (
     <div className="flex flex-col gap-3">
       {optimisticExperiences.map((exp, index) => (
-        <Card key={exp.id} className="flex-row items-center justify-between gap-4 py-4">
-          <CardContent className="flex items-center gap-3 px-5">
+        <Card key={exp.id} className="flex-col items-stretch gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <CardContent className="flex min-w-0 flex-wrap items-center gap-2 px-5 sm:gap-3">
             <span className="font-black">{exp.title}</span>
             <span className="text-sm text-muted-foreground">at {exp.company}</span>
             <span className="rounded-md border-2 border-border bg-card px-2 py-0.5 font-mono text-xs font-bold">

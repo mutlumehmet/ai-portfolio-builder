@@ -13,12 +13,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex flex-1 flex-col bg-background text-foreground">
       <div className="mx-auto w-full max-w-5xl px-6">
-        <nav className="flex items-center justify-between border-b-2 border-border py-6">
+        <nav className="flex flex-col gap-4 border-b-2 border-border py-6 sm:flex-row sm:items-center sm:justify-between">
           <Link href="/admin/projects" className="flex items-center gap-2 text-xl font-black">
             <Logo initials={siteConfig.person.initials} className="size-8" />
             {siteConfig.admin.label}
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link href="/admin/projects" className="text-sm font-bold hover:underline">
               Projects
             </Link>

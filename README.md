@@ -4,9 +4,11 @@
 
 **A complete portfolio website for developers and designers, plus an optional AI layer that answers questions about your work from your own content.**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D) [![See it live: mehmetmutlu.dev](https://img.shields.io/badge/See_it_live-mehmetmutlu.dev-d2462c?style=for-the-badge)](https://www.mehmetmutlu.dev)
+<p align="center"><a href="https://www.mehmetmutlu.dev"><img src="docs/images/see-it-live.png" alt="See it live: mehmetmutlu.dev" width="420"></a></p>
 
 *See it live* opens the portfolio this template was extracted from: same structure, AI chat and job-fit check, with its own content and colours.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
 ## Take the tour
 
@@ -26,11 +28,17 @@ Edit content in `/admin`, or let any coding agent add and remove projects with a
 
 ![A portfolio you can manage with your agent: the admin panel next to a terminal where a coding agent runs npm run project:upsert and the search index re-syncs](docs/images/manage-with-agent.png)
 
+## Looks right on every screen
+
+Every page has a phone, tablet and desktop layout, with a menu on phones, and the admin panel works on a phone too.
+
+![Looks right on every screen: the home page in a desktop browser, a project page on a tablet and the home page on a phone](docs/images/responsive.png)
+
 ## Everything is ready
 
 The parts you would otherwise build yourself are already in place. Details in [Ready to deploy](#ready-to-deploy).
 
-![Everything is ready: one-click deploy, self-setup database, Postgres with pgvector, ready backend, admin panel, security, rate limits, colour themes, feature flags and an optional AI layer](docs/images/everything-ready.png)
+![Everything is ready: one-click deploy, self-setup database, Postgres with pgvector, ready backend, admin panel, responsive layouts, security, rate limits, SEO and share images, colour themes, feature flags and an optional AI layer](docs/images/everything-ready.png)
 
 ## Ready to deploy
 
@@ -44,8 +52,10 @@ Everything below is already done for you.
 | **Self-setup database** | The first deploy runs the migrations, loads the sample content and builds the search index. |
 | **Postgres with pgvector** | The first migration creates the `vector` extension, so there is nothing to enable by hand. |
 | **Admin panel** | Edit projects, tags, FAQs and experience in the browser at `/admin`. |
+| **Responsive** | Phone, tablet and desktop layouts for every page, a mobile menu, and an admin panel that works on a phone. |
 | **Security** | Every admin action checks the session, login attempts are limited, and AI inputs have length caps. |
 | **Rate limits** | Per-IP limits on every AI endpoint. |
+| **SEO and share images** | Page titles and descriptions, Open Graph tags, a generated share image for the site, and each project's cover as its share image. |
 | **Colour themes** | Ready-made [colour themes](#colour-themes), including pastels and neutrals, switched with one line. |
 | **Feature flags** | Switch any part off in `site.config.ts` or with an environment variable. |
 | **Optional AI layer** | Switch the chat, the fit check and the MCP server off and you have a plain portfolio. |
@@ -96,6 +106,14 @@ The portfolio is a full site on its own. These are its pages, shown with the sam
 </td>
 </tr>
 </table>
+
+Every page also has a phone layout, with a menu in place of the header links:
+
+<p>
+<img src="docs/images/screens/mobile/home.png" width="200" alt="Home page on a phone">
+<img src="docs/images/screens/mobile/work.png" width="200" alt="Selected work on a phone">
+<img src="docs/images/screens/mobile/project.png" width="200" alt="A project page on a phone">
+</p>
 
 ## How the portfolio works
 

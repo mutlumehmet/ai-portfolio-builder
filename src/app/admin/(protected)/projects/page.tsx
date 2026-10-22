@@ -23,7 +23,7 @@ export default async function AdminProjectsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-black">Projects</h1>
         <Button asChild>
           <Link href="/admin/projects/new">+ New project</Link>

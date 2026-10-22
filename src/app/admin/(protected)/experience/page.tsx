@@ -13,7 +13,7 @@ export default async function AdminExperiencePage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-black">Experience</h1>
         <Button asChild>
           <Link href="/admin/experience/new">+ New role</Link>

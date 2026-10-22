@@ -130,9 +130,9 @@ function ProjectGroup({
       {projects.map((project, index) => (
         <Card
           key={project.id}
-          className="flex-row items-center justify-between gap-4 py-4"
+          className="flex-col items-stretch gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
         >
-          <CardContent className="flex items-center gap-3 px-5">
+          <CardContent className="flex min-w-0 flex-wrap items-center gap-2 px-5 sm:gap-3">
             <span className="font-black">{project.title}</span>
             <span className="text-sm text-muted-foreground">/{project.slug}</span>
             {project.liveUrl && (
