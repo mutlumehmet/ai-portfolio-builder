@@ -10,6 +10,8 @@
 
 ## Three ways to set it up
 
+![Three ways to set it up: 1, Deploy with Vercel with no code; 2, npm run setup on your machine; 3, ask your coding agent. All three can start from your LinkedIn, CV and GitHub](docs/images/three-ways.png)
+
 All three can start from your LinkedIn profile, CV and GitHub: the draft is made by your own AI provider and key (OpenAI, Claude, Gemini and others) or your own coding agent, and you review it before anything is written (see [Import from LinkedIn, CV and GitHub](#import-from-linkedin-cv-and-github)).
 
 **1. Deploy with Vercel, no code**
@@ -311,6 +313,8 @@ Not every provider honours JSON mode, so the fit check and the profile import as
 6. **Projects from the command line or a coding agent:** `npm run project:upsert -- path/to/project.json` creates or updates one project from a JSON file (same shape as `scripts/example-project.json`), and `npm run project:delete -- <slug>` removes one. Both re-sync the chat's search index straight away, so an AI coding assistant can manage your projects for you.
 
 ### Import from LinkedIn, CV and GitHub
+
+![Start from your LinkedIn, CV and GitHub: three sources go to your own AI, which drafts a summary of your profile, experience, projects and FAQs for you to approve or edit](docs/images/profile-import.png)
 
 Instead of typing everything, give the import your LinkedIn profile URL, a CV file (PDF, .docx or .txt, up to 5 MB) and your GitHub username. Each one is optional. It drafts your name, role, location, links, home page text (badge, headline, intro, stats, journey), SEO text, experience, FAQs and projects, and shows you a summary before anything is written.
 
