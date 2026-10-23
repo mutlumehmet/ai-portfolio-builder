@@ -10,17 +10,19 @@
 
 ## Three ways to set it up
 
-![Three ways to set it up: 1, Deploy with Vercel with no code; 2, npm run setup on your machine; 3, ask your coding agent. All three can start from your LinkedIn, CV and GitHub](docs/images/three-ways.png)
+![Three ways to set it up, pick one: A, Deploy with Vercel with no code; B, npm run setup on your machine; C, ask your coding agent. All three can start from your LinkedIn, CV and GitHub](docs/images/three-ways.png)
 
 All three can start from your LinkedIn profile, CV and GitHub: the draft is made by your own AI provider and key (OpenAI, Claude, Gemini and others) or your own coding agent, and you review it before anything is written (see [Import from LinkedIn, CV and GitHub](#import-from-linkedin-cv-and-github)).
 
-**1. Deploy with Vercel, no code**
+**A. Deploy with Vercel, no code**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-builder&project-name=my-portfolio&repository-name=my-portfolio&env=AI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20AI%20API%20key%20%28works%20with%20OpenAI%20by%20default%3B%20for%20another%20provider%20set%20AI_BASE_URL%20and%20CHAT_MODEL%20after%20deploy%29%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-builder%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
 Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Then open `/admin/import` on your new site to draft your content from LinkedIn, a CV and GitHub. Details in [Deploy in one click](#deploy-in-one-click).
 
-**2. One command on your machine**
+<p align="center"><b>or</b></p>
+
+**B. One command on your machine**
 
 ```bash
 git clone https://github.com/mutlumehmet/ai-portfolio-builder.git my-portfolio
@@ -29,7 +31,9 @@ cd my-portfolio && npm install && npm run setup
 
 Offers to import from your LinkedIn, CV and GitHub first, then asks for your name, links, colour theme, database and AI provider (OpenAI, Anthropic, Gemini, OpenRouter, Ollama or another OpenAI-compatible one), writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
 
-**3. Ask your coding agent**
+<p align="center"><b>or</b></p>
+
+**C. Ask your coding agent**
 
 Open the cloned folder in Claude Code, Codex or another coding agent and paste:
 
@@ -419,6 +423,10 @@ docker-compose.yml    local Postgres with pgvector
 * Built on Next.js, React, Prisma, pgvector, Tailwind CSS, OpenAI, mcp-handler, unpdf and mammoth.
 
 ## Licence
+
+Free and open source.
+
+![Free and open source: the mutlumehmet/ai-portfolio-builder repository with an MIT licence and a Use this template button, the clone and setup commands, and the stack: Next.js, Prisma, Postgres with pgvector and Tailwind CSS](docs/images/open-source.png)
 
 Code: [MIT](LICENSE). Sample content (everything in `content/`, the sample CV, avatar and project images in `public/`) is released under [CC0](https://creativecommons.org/publicdomain/zero/1.0/): use it freely while you test. The sample persona and every company and project in it are fictional; any resemblance to real people or businesses is a coincidence.
 
