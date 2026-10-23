@@ -2,6 +2,7 @@ import "dotenv/config";
 import { execSync } from "node:child_process";
 
 import { PrismaClient } from "../src/generated/prisma/client";
+import { embeddingsConfigured } from "../src/lib/ai-env";
 import { createDbAdapter } from "../src/lib/db-adapter";
 
 // Vercel runs `npm run vercel-build` instead of `npm run build` when it exists.
@@ -36,15 +37,17 @@ async function prepareDatabase() {
     await prisma.$disconnect();
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    console.warn("\nOPENAI_API_KEY is not set: the chat has no search index until you set it and redeploy.");
+  if (!embeddingsConfigured()) {
+    console.warn(
+      "\nNo embedding provider (AI_API_KEY, or EMBEDDING_API_KEY): the AI features stay off and there is no search index until you set one and redeploy."
+    );
     return;
   }
   try {
     run("npm run rag:ingest");
   } catch {
     // The site still works without the index; the chat answers once it is built.
-    console.warn("\nBuilding the search index failed. Check OPENAI_API_KEY, then redeploy or run `npm run rag:ingest`.");
+    console.warn("\nBuilding the search index failed. Check AI_API_KEY (or EMBEDDING_API_KEY) and EMBEDDING_MODEL, then redeploy or run `npm run rag:ingest`.");
   }
 }
 

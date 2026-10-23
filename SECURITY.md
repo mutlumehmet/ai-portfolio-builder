@@ -21,7 +21,7 @@ Also:
 
 * Use a long random `ADMIN_PASSWORD` and `SESSION_SECRET`. The app refuses the example values in production.
 * Turn off features you do not use (`FEATURE_MCP=false`, for example). A disabled endpoint returns 404.
-* Keep `OPENAI_API_KEY` and `DATABASE_URL` only in your host's environment settings, never in the repository.
+* Keep `AI_API_KEY` (or `OPENAI_API_KEY`), any `EMBEDDING_API_KEY` and `DATABASE_URL` only in your host's environment settings, never in the repository.
 
 ## What the template already does
 

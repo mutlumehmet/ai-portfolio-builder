@@ -1,13 +1,13 @@
 // Interactive first-run setup: `npm run setup`.
 //
-// Asks for your details, a colour theme, a database and (optionally) an OpenAI
-// key, then writes site.config.ts and .env, creates the tables, loads the
+// Asks for your details, a colour theme, a database and (optionally) an AI
+// provider and key, then writes site.config.ts and .env, creates the tables, loads the
 // sample content, builds the chat's search index and offers to start the site.
 // Safe to run again: it asks before replacing an existing .env.
 //
 // It can start from your LinkedIn profile, CV and GitHub: the first question
 // offers an import, which drafts your details, home page text, experience,
-// FAQs and projects with your own OpenAI key. You review the draft before
+// FAQs and projects with your own AI provider and key. You review the draft before
 // anything is written, and every later question still lets you change a value.
 import { execSync, spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
@@ -25,6 +25,7 @@ import { removeSampleContent } from "../src/lib/profile-import/save";
 import type { ProfileDraft } from "../src/lib/profile-import/schema";
 import { formatDraftSummary } from "../src/lib/profile-import/summary";
 import { themes } from "../themes";
+import { aiEnv, aiEnvLines, PROVIDERS, type AiChoice, type ProviderName } from "./lib/ai-providers";
 import { writeDraftContent } from "./lib/content-writer";
 import { applyDraftBlocks, setString } from "./lib/site-config-writer";
 
@@ -104,6 +105,103 @@ async function askImport() {
   return false;
 }
 
+// "Which AI provider?" plus its key, model and embeddings. Returns null for none.
+// In the AI layer step, an answer that is not an option but looks like a key
+// (an older piped script answering the old "OpenAI API key" question) is put
+// back and read as an OpenAI key.
+async function askAiProvider(purpose: "import" | "layer"): Promise<AiChoice | null> {
+  const names = Object.keys(PROVIDERS) as ProviderName[];
+  const none = purpose === "import" ? "None (skip the import)" : "None (a plain portfolio without the AI layer)";
+  console.log(`\nWhich AI provider?${purpose === "import" ? " It writes the draft." : " It runs the chat, fit check and MCP server."}`);
+  [...names, none].forEach((o, i) => console.log(`  ${i + 1}. ${o}${o === none ? dim(" (default)") : ""}`));
+  let name: ProviderName | null = null;
+  for (;;) {
+    const answer = (await readLine(`Pick a number or a name ${dim("(none)")}: `)).trim();
+    if (!answer || /^none$/i.test(answer) || answer === String(names.length + 1)) break;
+    const byNumber = names[Number(answer) - 1];
+    const byName = names.find((n) => n.toLowerCase().startsWith(answer.toLowerCase()));
+    if (byNumber ?? byName) {
+      name = (byNumber ?? byName) as ProviderName;
+      break;
+    }
+    if (purpose === "layer" && /^\S{20,}$/.test(answer)) {
+      lines.unshift(answer);
+      name = "OpenAI";
+      break;
+    }
+    console.log("Not one of the options, try again.");
+  }
+  if (!name) return null;
+
+  const p = PROVIDERS[name];
+  if (p.note) console.log(dim(p.note));
+  let baseURL = p.baseURL;
+  if (name === "Other (OpenAI-compatible)") {
+    for (;;) {
+      baseURL = await ask("Base URL of its OpenAI-compatible API (https://.../v1)");
+      if (/^https?:\/\//.test(baseURL)) break;
+      console.log("That does not look like an http(s):// URL, try again.");
+    }
+  }
+
+  let apiKey = "";
+  if (p.needsKey) {
+    if (p.keyHint) console.log(dim(p.keyHint));
+    apiKey = await ask(`${name} API key (Enter to skip)`);
+    if (!apiKey) {
+      console.log(`No ${name} key, so no AI provider is set.`);
+      return null;
+    }
+  } else if (name !== "Ollama (local)") {
+    apiKey = await ask("API key (Enter if it needs none)");
+  }
+
+  // OpenAI keeps its default model without a question, so older piped answers still line up.
+  let chatModel = p.chatModel;
+  if (name !== "OpenAI") {
+    for (;;) {
+      chatModel = await ask("Chat model", p.chatModel);
+      if (chatModel) break;
+      console.log("A model name is needed, for example the one in your provider's model list.");
+    }
+  }
+
+  if (name === "OpenAI") return { provider: name, apiKey, baseURL, chatModel, embedding: { kind: "same", model: "text-embedding-3-small" } };
+
+  // Embeddings for the chat's search index.
+  const same =
+    p.embeddings === null ? null : `${name} (${p.embeddings === "ask-model" ? "an embedding model you name" : p.embeddings.model})`;
+  const viaOpenAI = "OpenAI (needs an OpenAI key)";
+  const skip = "Skip (no search index: the chat, fit check and MCP server stay off)";
+  const options = [...(same ? [same] : []), viaOpenAI, skip];
+  const fallback = name === "OpenRouter" ? same! : name === "Ollama (local)" || name.startsWith("Other") ? skip : viaOpenAI;
+  console.log(dim("\nThe chat's search index needs an embedding model that returns 1536 numbers per text."));
+  const pick = await choose("Embeddings for the search index", options, fallback);
+
+  if (pick === same && p.embeddings) {
+    if (p.embeddings === "ask-model") {
+      const model = await ask("Embedding model (it must return 1536 numbers; EMBEDDING_DIMENSIONS=1536 is sent)");
+      if (model) return { provider: name, apiKey, baseURL, chatModel, embedding: { kind: "same", model, dimensions: 1536 } };
+      console.log("No embedding model, so the search index is skipped.");
+    } else {
+      if (p.embeddings.note) console.log(dim(p.embeddings.note));
+      return {
+        provider: name,
+        apiKey,
+        baseURL,
+        chatModel,
+        embedding: { kind: "same", model: p.embeddings.model, dimensions: p.embeddings.dimensions },
+      };
+    }
+  } else if (pick === viaOpenAI) {
+    console.log(dim(PROVIDERS.OpenAI.keyHint));
+    const openaiKey = await ask("OpenAI API key for embeddings (Enter to skip the search index)");
+    if (openaiKey) return { provider: name, apiKey, baseURL, chatModel, embedding: { kind: "openai", apiKey: openaiKey } };
+  }
+  console.log("No search index: the chat, fit check and MCP server stay off. The import and the rest of the site work.");
+  return { provider: name, apiKey, baseURL, chatModel, embedding: { kind: "none" } };
+}
+
 function readFileSource(path: string) {
   const clean = path.trim().replace(/^['"]|['"]$/g, "");
   if (!existsSync(clean)) {
@@ -113,7 +211,7 @@ function readFileSource(path: string) {
   return { name: basename(clean), buffer: readFileSync(clean), path: clean };
 }
 
-type ImportOutcome = { draft: ProfileDraft; apiKey: string; cvPdf?: string };
+type ImportOutcome = { draft: ProfileDraft; ai: AiChoice | null; cvPdf?: string };
 
 async function runImport(): Promise<ImportOutcome | null> {
   console.log(dim("\nEach one is optional: press Enter to skip it."));
@@ -124,11 +222,11 @@ async function runImport(): Promise<ImportOutcome | null> {
     console.log("Nothing to import, so the import is skipped.");
     return null;
   }
-  console.log(dim("The draft is written by your own OpenAI key: your CV and profile text go to OpenAI with it. Nothing is written until you say yes."));
-  const apiKey = await ask("OpenAI API key for the draft (Enter to skip the import)");
+  console.log(dim("The draft is written by your own AI provider and key: your CV and profile text go to that provider. Nothing is written until you say yes."));
+  const ai = await askAiProvider("import");
   // PROFILE_IMPORT_FIXTURE stands in for the model in development and tests (see AGENTS.md).
-  if (!apiKey && !process.env.PROFILE_IMPORT_FIXTURE) {
-    console.log("No OpenAI key, so there is no draft: the import is skipped and setup carries on with the questions.");
+  if (!ai && !process.env.PROFILE_IMPORT_FIXTURE) {
+    console.log("No AI provider, so there is no draft: the import is skipped and setup carries on with the questions.");
     return null;
   }
 
@@ -167,10 +265,13 @@ async function runImport(): Promise<ImportOutcome | null> {
     return null;
   }
 
-  console.log(dim("Writing the draft (one OpenAI call)..."));
+  console.log(dim("Writing the draft (one model call)..."));
   let result;
   try {
-    result = await buildProfileDraft(sources, { apiKey: apiKey || undefined });
+    result = await buildProfileDraft(
+      sources,
+      ai ? { apiKey: ai.apiKey || undefined, baseURL: ai.baseURL || undefined, model: ai.chatModel } : {}
+    );
   } catch (err) {
     if (!(err instanceof ProfileImportError)) throw err;
     console.log(`! ${err.message} The import is skipped; setup carries on with the questions.`);
@@ -184,7 +285,7 @@ async function runImport(): Promise<ImportOutcome | null> {
     console.log("Draft discarded. Setup carries on with the questions.");
     return null;
   }
-  return { draft: result.draft, apiKey, cvPdf: cv && /\.pdf$/i.test(cv.name) ? cv.path : undefined };
+  return { draft: result.draft, ai, cvPdf: cv && /\.pdf$/i.test(cv.name) ? cv.path : undefined };
 }
 
 async function main() {
@@ -246,13 +347,14 @@ async function main() {
   }
 
   // 4. AI layer
-  let openaiKey = imported?.apiKey ?? "";
-  if (openaiKey) {
-    console.log(dim("\nThe AI layer (chat, job-fit check, MCP) uses the OpenAI key you gave for the import."));
+  let ai = imported?.ai ?? null;
+  if (ai) {
+    console.log(dim(`\nThe AI layer (chat, job-fit check, MCP) uses ${ai.provider}, as chosen for the import.`));
   } else {
-    console.log(dim("\nThe AI layer (chat, job-fit check, MCP) needs an OpenAI key. Leave it empty for a plain portfolio."));
-    openaiKey = await ask("OpenAI API key (Enter to skip)", "");
+    console.log(dim("\nThe AI layer (chat, job-fit check, MCP) needs an AI provider. Choose none for a plain portfolio."));
+    ai = await askAiProvider("layer");
   }
+  const searchIndex = Boolean(ai && ai.embedding.kind !== "none");
 
   const useCvPdf = imported?.cvPdf
     ? await askYes(`Use ${basename(imported.cvPdf)} as the CV visitors download (public/cv.pdf)?`, true)
@@ -314,18 +416,15 @@ async function main() {
       `DATABASE_URL="${databaseUrl}"`,
       `ADMIN_PASSWORD="${adminPassword}"`,
       `SESSION_SECRET="${randomBytes(32).toString("base64")}"`,
-      `OPENAI_API_KEY="${openaiKey}"`,
+      ...aiEnvLines(ai),
     ];
-    if (!openaiKey) {
-      lines.push("# No OpenAI key: the AI layer is off. Add a key and remove these to turn it on.");
-      lines.push("FEATURE_CHAT=false", "FEATURE_FIT_CHECK=false", "FEATURE_MCP=false");
-    }
     writeFileSync(".env", lines.join("\n") + "\n");
     console.log(`${bold("Wrote")} .env`);
   }
 
   // Database, content and search index
-  const env = { ...process.env, DATABASE_URL: databaseUrl, OPENAI_API_KEY: openaiKey };
+  // Every AI variable is set explicitly, so nothing from this shell leaks into the seed or the index build.
+  const env = { ...process.env, DATABASE_URL: databaseUrl, ...aiEnv(ai) };
   if (useDocker) {
     run("docker compose up -d db");
     await waitForDocker();
@@ -342,11 +441,11 @@ async function main() {
     }
   }
   run("npx prisma db seed", env);
-  if (openaiKey) {
+  if (searchIndex) {
     try {
       run("npm run rag:ingest", env);
     } catch {
-      console.log("Building the search index failed. Check the OpenAI key, then run `npm run rag:ingest`.");
+      console.log("Building the search index failed. Check the AI key and EMBEDDING_MODEL in .env, then run `npm run rag:ingest`.");
     }
   }
 

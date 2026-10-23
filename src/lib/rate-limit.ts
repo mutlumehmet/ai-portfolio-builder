@@ -3,7 +3,7 @@
 // Each serverless instance keeps its own counters, so this is not a hard
 // global cap: it stops a single client from hammering the AI endpoints
 // through one warm instance, which is the common abuse case. A hard cap
-// belongs in the Vercel Firewall and the OpenAI project budget (see SECURITY.md).
+// belongs in the Vercel Firewall and the AI provider's budget (see SECURITY.md).
 
 import { features, rateLimits } from "@/lib/config";
 

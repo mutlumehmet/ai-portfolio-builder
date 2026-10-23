@@ -1,5 +1,7 @@
 import { siteConfig } from "@site-config";
 
+import { aiConfigured, chatModel, embeddingModel, embeddingsConfigured } from "@/lib/ai-env";
+
 export { siteConfig };
 
 type FeatureName = keyof typeof siteConfig.features;
@@ -30,6 +32,12 @@ function resolveFeatures() {
     const override = envFlag(FEATURE_ENV[key]);
     if (override !== undefined) out[key] = override;
   }
+  // The chat, the fit check and the MCP server need a chat model and
+  // embeddings for their search; without them they are off, whatever the flags say.
+  const aiReady = aiConfigured() && embeddingsConfigured();
+  out.chat = out.chat && aiReady;
+  out.fitCheck = out.fitCheck && aiReady;
+  out.mcp = out.mcp && aiReady;
   // The file upload only exists inside the fit check.
   out.parseJd = out.parseJd && out.fitCheck;
   return out;
@@ -47,10 +55,11 @@ export const siteUrl = (
   siteConfig.url
 ).replace(/\/+$/, "");
 
-export const chatModel = process.env.CHAT_MODEL || "gpt-4.1-mini";
-// The Chunk table stores 1536-dimension vectors. If you switch to a model with
-// a different output size, change vector(1536) in the schema and migration too.
-export const embeddingModel = process.env.EMBEDDING_MODEL || "text-embedding-3-small";
+// The AI provider settings live in ai-env.ts (AI_API_KEY, AI_BASE_URL,
+// CHAT_MODEL, EMBEDDING_*). The Chunk table stores 1536-dimension vectors; a
+// model with a different output size needs vector(1536) changed in the schema
+// and migration too.
+export { chatModel, embeddingModel };
 
 function intEnv(name: string, fallback: number) {
   const n = Number(process.env[name]);

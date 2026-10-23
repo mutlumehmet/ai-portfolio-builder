@@ -2,7 +2,7 @@
  * Draft site content from a LinkedIn profile, a CV and a GitHub profile.
  *
  *   npm run import -- --linkedin <url> --cv <path> --github <user>
- *       Reads the sources, asks OpenAI (your own OPENAI_API_KEY) for a draft,
+ *       Reads the sources, asks your own AI provider (AI_API_KEY) for a draft,
  *       prints a summary and the draft JSON. Writes nothing.
  *       --cv can be given more than once (for example a CV and a LinkedIn PDF).
  *       --out draft.json  also saves the draft JSON to a file.
@@ -92,7 +92,7 @@ async function main() {
   }
 
   const result = await buildProfileDraft(sources);
-  if (result.fromFixture) console.log("\n(Draft read from PROFILE_IMPORT_FIXTURE, not from OpenAI.)");
+  if (result.fromFixture) console.log("\n(Draft read from PROFILE_IMPORT_FIXTURE, not from the AI provider.)");
   console.log(`\nDRAFT SUMMARY\n\n${formatDraftSummary(result.draft, result.dropped)}`);
   const text = JSON.stringify(result.draft, null, 2);
   console.log(`\nDRAFT JSON\n${text}`);

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   const declared = Number(request.headers.get("content-length") ?? 0);
   if (declared > MAX_BODY) return fail("The upload is too large (max 5 MB per file).", 413);
 
-  // Each draft is one OpenAI call on the owner's key: 10 an hour per IP.
+  // Each draft is one model call on the owner's key: 10 an hour per IP.
   if (!rateLimit("admin-import", clientIp(request.headers), 10, 60 * 60_000)) {
     return NextResponse.json(
       { ...empty, id: Date.now(), error: "That is 10 drafts in an hour. Wait a while and try again." },

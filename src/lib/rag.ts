@@ -1,24 +1,13 @@
-import OpenAI from "openai";
 import { z } from "zod";
 
-import { chatModel, embeddingModel, siteConfig } from "@/lib/config";
+import { chatJson, chatText, embedTexts } from "@/lib/ai-client";
+import { siteConfig } from "@/lib/config";
 import { checkEasterEgg } from "@/lib/easter-eggs";
 import { prisma } from "@/lib/prisma";
 
-function getOpenAI() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not set.");
-  }
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-}
-
 export async function embedText(text: string): Promise<number[]> {
-  const openai = getOpenAI();
-  const res = await openai.embeddings.create({
-    model: embeddingModel,
-    input: text,
-  });
-  return res.data[0].embedding;
+  const [vector] = await embedTexts([text]);
+  return vector;
 }
 
 // pgvector accepts a bracketed, comma-separated literal like "[0.1,0.2,...]"
@@ -107,22 +96,13 @@ export async function answerChatQuestion(question: string): Promise<string> {
   const easterEgg = checkEasterEgg(question);
   if (easterEgg) return easterEgg;
 
-  const openai = getOpenAI();
   const queryEmbedding = await embedText(question);
   const chunks = await retrieveRelevantChunks(queryEmbedding);
 
-  const completion = await openai.chat.completions.create({
-    model: chatModel,
-    messages: [
-      { role: "system", content: CHAT_SYSTEM_PROMPT },
-      {
-        role: "user",
-        content: `CONTEXT:\n${formatContext(chunks)}\n\nQUESTION:\n${question}`,
-      },
-    ],
+  return chatText({
+    system: CHAT_SYSTEM_PROMPT,
+    user: `CONTEXT:\n${formatContext(chunks)}\n\nQUESTION:\n${question}`,
   });
-
-  return completion.choices[0].message.content ?? "";
 }
 
 const FIT_CHECK_SYSTEM_PROMPT = `You analyze how well ${person.name}'s background matches a job description, using only the CONTEXT (content from ${person.pronouns.possessive} portfolio site). Never invent experience that is not in the CONTEXT.
@@ -149,29 +129,14 @@ const fitCheckSchema = z.object({
 export type FitCheckResult = z.infer<typeof fitCheckSchema>;
 
 export async function checkJobFit(jobDescription: string): Promise<FitCheckResult> {
-  const openai = getOpenAI();
   const queryEmbedding = await embedText(jobDescription);
   const chunks = await retrieveFitCheckContext(queryEmbedding);
 
-  const completion = await openai.chat.completions.create({
-    model: chatModel,
-    response_format: { type: "json_object" },
-    messages: [
-      { role: "system", content: FIT_CHECK_SYSTEM_PROMPT },
-      {
-        role: "user",
-        content: `CONTEXT:\n${formatContext(chunks)}\n\nJOB DESCRIPTION:\n${jobDescription}`,
-      },
-    ],
+  // The model's JSON is parsed defensively (fences, extra text) and validated
+  // before it reaches the visitor; anything malformed becomes an error.
+  const raw = await chatJson({
+    system: FIT_CHECK_SYSTEM_PROMPT,
+    user: `CONTEXT:\n${formatContext(chunks)}\n\nJOB DESCRIPTION:\n${jobDescription}`,
   });
-
-  // The model's JSON is validated before it reaches the visitor; anything
-  // malformed becomes an error instead of being passed through.
-  let raw: unknown;
-  try {
-    raw = JSON.parse(completion.choices[0].message.content ?? "{}");
-  } catch {
-    throw new Error("Fit check returned invalid JSON");
-  }
   return fitCheckSchema.parse(raw);
 }

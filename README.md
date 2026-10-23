@@ -10,11 +10,11 @@
 
 ## Three ways to set it up
 
-All three can start from your LinkedIn profile, CV and GitHub: the draft is made by your own OpenAI key or your own coding agent, and you review it before anything is written (see [Import from LinkedIn, CV and GitHub](#import-from-linkedin-cv-and-github)).
+All three can start from your LinkedIn profile, CV and GitHub: the draft is made by your own AI provider and key (OpenAI, Claude, Gemini and others) or your own coding agent, and you review it before anything is written (see [Import from LinkedIn, CV and GitHub](#import-from-linkedin-cv-and-github)).
 
 **1. Deploy with Vercel, no code**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=OPENAI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20OpenAI%20API%20key%20for%20the%20chat%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=AI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20AI%20API%20key%20%28works%20with%20OpenAI%20by%20default%3B%20for%20another%20provider%20set%20AI_BASE_URL%20and%20CHAT_MODEL%20after%20deploy%29%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
 Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Then open `/admin/import` on your new site to draft your content from LinkedIn, a CV and GitHub. Details in [Deploy in one click](#deploy-in-one-click).
 
@@ -25,7 +25,7 @@ git clone https://github.com/mutlumehmet/ai-portfolio-starter.git my-portfolio
 cd my-portfolio && npm install && npm run setup
 ```
 
-Offers to import from your LinkedIn, CV and GitHub first, then asks for your name, links, colour theme, database and OpenAI key, writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
+Offers to import from your LinkedIn, CV and GitHub first, then asks for your name, links, colour theme, database and AI provider (OpenAI, Anthropic, Gemini, OpenRouter, Ollama or another OpenAI-compatible one), writes your config and `.env`, sets up the database and starts the site at http://localhost:3000.
 
 **3. Ask your coding agent**
 
@@ -73,7 +73,7 @@ The parts you would otherwise build yourself are already in place. Details in [R
 
 ## Ready to deploy
 
-Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI. Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see every page working before you add your own content.
+Built with Next.js 16, Prisma 7, Postgres with pgvector and OpenAI (or any OpenAI-compatible AI provider). Deploys to Vercel with a free Neon database. Ships with a fictional sample persona (Odile Brandqvist, a product engineer) so you can see every page working before you add your own content.
 
 Everything below is already done for you.
 
@@ -189,7 +189,7 @@ On the home page, visitors and recruiters get one panel with three tabs:
 The [animation above](#how-the-ai-layer-answers) shows these steps.
 
 1. Your content (projects, experience, FAQs) lives in Postgres. You load it from the JSON files in `content/` or edit it in `/admin`.
-2. `npm run rag:ingest` splits that content into short chunks, turns each into an embedding (a list of 1536 numbers that captures its meaning) with OpenAI, and stores them in a pgvector column.
+2. `npm run rag:ingest` splits that content into short chunks, turns each into an embedding (a list of 1536 numbers that captures its meaning) with your embedding provider (OpenAI by default), and stores them in a pgvector column.
 3. When a visitor asks a question, the question is embedded the same way, the closest chunks are found by cosine distance, and only those chunks are given to the chat model as context.
 4. The fit check does the same with a job description, and the model's JSON answer is validated before it is shown.
 5. The MCP server wraps the same two functions as tools, so an AI assistant can query your portfolio directly.
@@ -198,11 +198,11 @@ Admin edits and the content scripts re-sync the index automatically. Only change
 
 ## Deploy in one click
 
-The [Deploy with Vercel](#ai-portfolio-starter) button at the top copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your OpenAI API key, a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
+The [Deploy with Vercel](#ai-portfolio-starter) button at the top copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your AI API key (`AI_API_KEY`, an OpenAI key by default; see [Choosing an AI provider](#choosing-an-ai-provider) for others), a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
 
 ## Quick start
 
-You need Node.js 20 or newer and an OpenAI API key. Pick Neon (hosted) or Docker (local) for the database.
+You need Node.js 20 or newer and, for the AI layer, an API key from an AI provider (OpenAI by default, see [Choosing an AI provider](#choosing-an-ai-provider)). Pick Neon (hosted) or Docker (local) for the database.
 
 ```bash
 # Use "Use this template" on GitHub, or clone your fork:
@@ -227,7 +227,7 @@ The default `DATABASE_URL` in `.env.example` already points at it. `npm run db:d
 
 ### Then, for either option
 
-1. Set `ADMIN_PASSWORD`, `SESSION_SECRET` (`openssl rand -base64 32`) and `OPENAI_API_KEY` in `.env`.
+1. Set `ADMIN_PASSWORD`, `SESSION_SECRET` (`openssl rand -base64 32`) and `AI_API_KEY` in `.env` (plus `AI_BASE_URL` and `CHAT_MODEL` for a provider other than OpenAI).
 2. Create the tables, load the sample content and build the search index:
 
 ```bash
@@ -242,7 +242,7 @@ Open http://localhost:3000.
 ### Deploy to Vercel by hand
 
 1. Push your copy to GitHub and import it in Vercel.
-2. Add the environment variables from `.env` (at least `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET` and `OPENAI_API_KEY`). `NEXT_PUBLIC_SITE_URL` is only needed for a custom domain; otherwise the Vercel production URL is used.
+2. Add the environment variables from `.env` (at least `DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET` and `AI_API_KEY`, plus any other `AI_*` and `EMBEDDING_*` values you use). `NEXT_PUBLIC_SITE_URL` is only needed for a custom domain; otherwise the Vercel production URL is used.
 3. Deploy. The first build prepares the database, as below.
 4. Before you share the link, follow the cost steps in [Cost and security](#cost-and-security).
 
@@ -252,7 +252,7 @@ Vercel runs `npm run vercel-build` (`scripts/vercel-build.ts`), which runs these
 
 1. `prisma migrate deploy`: creates or updates the tables and the `vector` extension. It uses `DATABASE_URL_UNPOOLED` when set (the Neon integration sets it), because migrations need a direct connection.
 2. Loads the sample content from `content/`, **only while the database has no projects**, so it never overwrites or brings back what you changed in `/admin`.
-3. `rag:ingest`: embeds only new or changed text, so a redeploy with no content changes costs nothing. If `OPENAI_API_KEY` is missing or wrong, the build still succeeds and prints a warning; fix the key and redeploy.
+3. `rag:ingest`: embeds only new or changed text, so a redeploy with no content changes costs nothing. If the key is missing or wrong, the build still succeeds and prints a warning; fix the key and redeploy. Without any AI key the chat, fit check and MCP server are switched off.
 
 Without `DATABASE_URL` the steps are skipped and only the site is built. `npm run build` never touches the database, so local builds work offline. If you use Vercel preview deployments with the same database as production, previews run the same migrations against it; Neon's integration can give each preview its own database branch instead.
 
@@ -263,15 +263,43 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 | `DATABASE_URL` | Yes | Postgres with pgvector. Neon URLs use Neon's serverless driver, others use node-postgres. `DATABASE_DRIVER=neon` or `pg` forces one. |
 | `ADMIN_PASSWORD` | For admin | Password for `/admin`. Refused in production while it is still the example value. |
 | `SESSION_SECRET` | For admin | Signs the admin cookie. Changing it logs every session out. |
-| `OPENAI_API_KEY` | For AI features | Embeddings and answers. |
-| `CHAT_MODEL` | No | Defaults to `gpt-4.1-mini`. |
-| `EMBEDDING_MODEL` | No | Defaults to `text-embedding-3-small` (1536 dimensions). |
+| `AI_API_KEY` | For AI features | Key for the chat model and, unless set separately, the embeddings. `OPENAI_API_KEY` still works in its place. Without a key (and without `AI_BASE_URL`) the chat, fit check and MCP server are off. |
+| `AI_BASE_URL` | No | The provider's OpenAI-compatible endpoint. Empty means OpenAI. See [Choosing an AI provider](#choosing-an-ai-provider). |
+| `CHAT_MODEL` | No | Defaults to `gpt-4.1-mini`. Set a model your provider offers. |
+| `EMBEDDING_API_KEY`, `EMBEDDING_BASE_URL` | No | A separate provider for embeddings. Both fall back to the `AI_*` values; `EMBEDDING_API_KEY` on its own means OpenAI. |
+| `EMBEDDING_MODEL` | No | Defaults to `text-embedding-3-small` (1536 dimensions). `none` switches embeddings, and with them the chat, fit check and MCP server, off. |
+| `EMBEDDING_DIMENSIONS` | No | Sent as `dimensions`, for an embedding model that can shorten its output to 1536. |
 | `NEXT_PUBLIC_SITE_URL` | No | Public URL; overrides `url` in `site.config.ts`. |
 | `FEATURE_*` | No | Feature flag overrides, see below. |
 | `RATE_LIMIT_PER_MINUTE`, `RATE_LIMIT_PER_DAY` | No | Per-IP limits for the AI endpoints. |
 | `GITHUB_TOKEN` | No | Used by the profile import for a higher GitHub rate limit. Without it, GitHub allows 60 requests an hour. |
 
 **About the embedding dimension:** the `Chunk.embedding` column is `vector(1536)`, the output size of `text-embedding-3-small`. If you switch to a model with a different size, change `vector(1536)` in `prisma/schema.prisma`, create a new migration, and run `npm run rag:ingest -- --full`.
+
+### Choosing an AI provider
+
+The AI layer talks to any OpenAI-compatible API. OpenAI is the default: set `AI_API_KEY` and nothing else. For another provider, set `AI_BASE_URL` and `CHAT_MODEL` too (`npm run setup` asks and fills them in). Old setups with `OPENAI_API_KEY` keep working.
+
+| Provider | `AI_BASE_URL` | Example `CHAT_MODEL` | Embeddings |
+|---|---|---|---|
+| OpenAI | (empty) | `gpt-4.1-mini` | Yes: `text-embedding-3-small` |
+| Anthropic (Claude) | `https://api.anthropic.com/v1/` | `claude-haiku-5-5` | No: use OpenAI with `EMBEDDING_API_KEY` |
+| Google Gemini | `https://generativelanguage.googleapis.com/v1beta/openai/` | `gemini-3.8-flash` | Use OpenAI with `EMBEDDING_API_KEY`, or try `gemini-embedding-001` with `EMBEDDING_DIMENSIONS=1536` |
+| OpenRouter | `https://openrouter.ai/api/v1` | `openai/gpt-4.1-mini` | Yes: `EMBEDDING_MODEL=openai/text-embedding-3-small` |
+| Ollama (local only, not on Vercel) | `http://localhost:11434/v1/` | `gpt-oss:20b` (no key needed) | Only a model that returns 1536 numbers; otherwise use OpenAI with `EMBEDDING_API_KEY` |
+
+Base URLs and models were checked against each provider's documentation in October 2026; model names change, so check your provider's model list.
+
+Chat with Claude, embeddings with OpenAI:
+
+```bash
+AI_API_KEY="your Claude API key"
+AI_BASE_URL="https://api.anthropic.com/v1/"
+CHAT_MODEL="claude-haiku-5-5"
+EMBEDDING_API_KEY="your OpenAI key"   # on its own, this means OpenAI embeddings
+```
+
+Not every provider honours JSON mode, so the fit check and the profile import ask for JSON, then read the first JSON object out of the answer and validate it before use. If no embedding provider is set up, the chat, fit check and MCP server switch themselves off; the rest of the site and the profile import still work.
 
 ## Make it yours
 
@@ -289,13 +317,13 @@ Instead of typing everything, give the import your LinkedIn profile URL, a CV fi
 * **What is read.** LinkedIn: your public profile page. CV: the text of the file. GitHub: your public profile and up to six of your own repositories that are not forks or archived (most stars first, then the most recently updated), with their descriptions, topics, languages and READMEs. `GITHUB_TOKEN` is used when set, for a higher rate limit.
 * **LinkedIn is best effort.** LinkedIn often blocks automated reads. The import tries once, with no login and no retries, and tells you when it could not read the page. Then open your profile on LinkedIn, choose More, then Save to PDF, and give that PDF as your CV file instead.
 * **Nothing is made up.** The model is told to use only facts from your sources and to leave anything unknown empty. Links, your email address and stat numbers that do not appear in your sources are dropped, and the summary lists what was left out. Check the draft anyway.
-* **Privacy.** Your CV and profile text are sent to OpenAI with your own key (or read by your own coding agent). Nothing is stored except what you approve.
-* **Cost.** One model call per draft, a few cents at most with the default model.
+* **Privacy.** Your CV and profile text are sent to your AI provider with your own key (or read by your own coding agent). Nothing is stored except what you approve.
+* **Cost.** One model call per draft, a few cents at most with the default OpenAI model.
 
 Where to run it:
 
 * `npm run setup` asks "Import from LinkedIn, CV and GitHub?" first. The draft becomes the default answer to each question, so you can still change any of them, and it writes `site.config.ts` and `content/`.
-* On a deployed site, open `/admin/import`. It saves projects, experience and FAQs to the database, and gives you a `site.config.ts` snippet for your name and home page text to paste, commit and redeploy (a deployed site cannot change its own config). It uses the deployment's `OPENAI_API_KEY`.
+* On a deployed site, open `/admin/import`. It saves projects, experience and FAQs to the database, and gives you a `site.config.ts` snippet for your name and home page text to paste, commit and redeploy (a deployed site cannot change its own config). It uses the deployment's AI provider (`AI_API_KEY`).
 * A coding agent can run `npm run import -- --linkedin <url> --cv <path> --github <user> --out draft.json`, show you the summary, and after your yes write it with `npm run import -- --apply draft.json`.
 
 ### Colour themes
@@ -321,9 +349,9 @@ Set in `site.config.ts` under `features`, or per deployment with environment var
 
 ## Cost and security
 
-The AI endpoints are public, so anyone can make the site spend your OpenAI credit. Each chat or fit-check call is one embedding plus one chat completion with roughly 1,500 to 3,000 input tokens: a fraction of a cent at current prices, so the risk is volume, not single calls. Before you share the link:
+The AI endpoints are public, so anyone can make the site spend your AI provider's credit. Each chat or fit-check call is one embedding plus one chat completion with roughly 1,500 to 3,000 input tokens: with the default OpenAI models a fraction of a cent, so the risk is volume, not single calls. Other providers and larger models cost more per call. Before you share the link:
 
-1. **Set a monthly budget** on the OpenAI project that owns your key (OpenAI dashboard, project limits). This is the hard stop.
+1. **Set a monthly budget** with your AI provider for the key (for OpenAI: dashboard, project limits). This is the hard stop.
 2. **Add a Vercel Firewall rate limit rule** for `/api/*` (Vercel dashboard, Firewall). The built-in limiter works per server instance, so it slows a single client down but is not a global cap.
 3. Use a long random `ADMIN_PASSWORD` and `SESSION_SECRET`.
 

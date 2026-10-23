@@ -247,7 +247,7 @@ function Review({
         <p className="mt-1 text-sm text-muted-foreground">
           Check every value: the draft only uses facts from your sources, but it can still get
           things wrong. Untick anything you do not want.
-          {fromFixture && " (Development: this draft came from PROFILE_IMPORT_FIXTURE, not from OpenAI.)"}
+          {fromFixture && " (Development: this draft came from PROFILE_IMPORT_FIXTURE, not from the AI provider.)"}
         </p>
         {dropped.length > 0 && (
           <div className="mt-3 rounded-lg border-2 border-border bg-secondary p-3 text-sm text-secondary-foreground">

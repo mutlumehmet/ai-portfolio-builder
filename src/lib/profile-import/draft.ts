@@ -1,12 +1,11 @@
-// Turns the collected sources into a draft with one OpenAI call, using the
-// owner's own OPENAI_API_KEY. The answer is validated with zod and then
+// Turns the collected sources into a draft with one chat model call, using the
+// owner's own AI provider and key (AI_API_KEY, see src/lib/ai-env.ts). The answer is validated with zod and then
 // checked against the sources: links, the email address and stat numbers
 // that do not appear in the sources are dropped.
 import { readFileSync } from "node:fs";
 
-import OpenAI from "openai";
-
-import { chatModel } from "@/lib/config";
+import { aiConfigured, chatJson, type ChatOverrides } from "@/lib/ai-client";
+import { JsonOutputError } from "@/lib/json-output";
 
 import type { GitHubResult } from "./github";
 import { gitHubToText } from "./github";
@@ -23,7 +22,7 @@ export type ImportSources = {
 export class ProfileImportError extends Error {}
 
 export const NEEDS_KEY_MESSAGE =
-  "The import needs OPENAI_API_KEY: the draft is written by your own OpenAI key. Add the key and try again.";
+  "The import needs AI_API_KEY (OPENAI_API_KEY also works): the draft is written by your own AI provider and key. Add the key and try again.";
 
 const MAX_SOURCE_TEXT = 60_000;
 
@@ -175,7 +174,7 @@ export type DraftResult = { draft: ProfileDraft; dropped: string[]; fromFixture:
 
 export async function buildProfileDraft(
   sources: ImportSources,
-  options: { apiKey?: string; model?: string } = {}
+  options: ChatOverrides = {}
 ): Promise<DraftResult> {
   if (!hasUsableSource(sources)) {
     throw new ProfileImportError("There is nothing to import: no LinkedIn profile, CV or GitHub profile could be read.");
@@ -188,37 +187,28 @@ export async function buildProfileDraft(
     githubUrl: sources.github?.status === "ok" ? sources.github.profile.url : undefined,
   };
 
-  const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  if (!options.apiKey && !options.baseURL && !aiConfigured()) {
     const fixture = fixtureDraft();
     if (fixture) return { ...groundDraft(draftSchema.parse(fixture), sourceText, given), fromFixture: true };
     throw new ProfileImportError(NEEDS_KEY_MESSAGE);
   }
 
-  const openai = new OpenAI({ apiKey });
-  let content: string;
-  try {
-    const completion = await openai.chat.completions.create({
-      model: options.model ?? chatModel,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `SOURCES:\n${sourceText}\n\nWrite the JSON draft from the SOURCES above, following the rules.` },
-      ],
-    });
-    content = completion.choices[0]?.message.content ?? "";
-  } catch (err) {
-    const status = (err as { status?: number }).status;
-    if (status === 401) throw new ProfileImportError("OpenAI refused the API key (401). Check OPENAI_API_KEY.");
-    if (status === 429) throw new ProfileImportError("OpenAI says the key is out of credit or rate limited (429).");
-    throw new ProfileImportError(`The OpenAI call failed${status ? ` (HTTP ${status})` : ""}.`);
-  }
-
   let raw: unknown;
   try {
-    raw = JSON.parse(content);
-  } catch {
-    throw new ProfileImportError("The model did not return valid JSON. Try again.");
+    raw = await chatJson(
+      {
+        system: SYSTEM_PROMPT,
+        user: `SOURCES:\n${sourceText}\n\nWrite the JSON draft from the SOURCES above, following the rules.`,
+      },
+      options
+    );
+  } catch (err) {
+    if (err instanceof JsonOutputError) throw new ProfileImportError(`${err.message} Try again.`);
+    const status = (err as { status?: number }).status;
+    if (status === 401) throw new ProfileImportError("The AI provider refused the API key (401). Check AI_API_KEY.");
+    if (status === 404) throw new ProfileImportError("The AI provider does not know that model (404). Check CHAT_MODEL and AI_BASE_URL.");
+    if (status === 429) throw new ProfileImportError("The AI provider says the key is out of credit or rate limited (429).");
+    throw new ProfileImportError(`The AI call failed${status ? ` (HTTP ${status})` : ""}.`);
   }
   const parsed = draftSchema.safeParse(raw);
   if (!parsed.success) throw new ProfileImportError("The model's draft did not have the expected shape. Try again.");

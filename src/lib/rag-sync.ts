@@ -1,17 +1,15 @@
 import { randomUUID } from "crypto";
 
-import OpenAI from "openai";
-
 import { Prisma, type PrismaClient } from "@/generated/prisma/client";
 import { parseBlockData, type BlockType } from "@/lib/blocks";
-import { embeddingModel } from "@/lib/config";
+import { embeddingsConfigured, embedTexts, NO_EMBEDDINGS_MESSAGE } from "@/lib/ai-client";
 
 // Keeps the chat's pgvector index in step with the content. Called after every
 // content write (the upsert/delete/seed scripts and the admin actions), and by
 // `npm run rag:ingest`.
 //
 // Incremental: a chunk whose text is unchanged keeps its stored embedding, so
-// only new or edited text goes to OpenAI. When the set of chunks is exactly the
+// only new or edited text goes to the embedding provider. When the set of chunks is exactly the
 // same as the stored one, nothing is written at all. When something changed,
 // the whole table is still swapped in one transaction, so visitors never see a
 // half-built index and removed content disappears with it.
@@ -98,6 +96,12 @@ export async function syncRagIndex(
   opts: { full?: boolean; log?: (line: string) => void } = {},
 ): Promise<RagSyncResult> {
   const log = opts.log ?? (() => {});
+  // Without an embedding provider there is no search index to keep (the AI
+  // features are off); content writes still succeed.
+  if (!embeddingsConfigured()) {
+    log(`Search index not updated: ${NO_EMBEDDINGS_MESSAGE}`);
+    return { total: 0, embedded: 0, reused: 0, removed: 0, written: false };
+  }
   const pending = await collectChunks(prisma);
 
   // What is stored now: each chunk's identity, and each text's vector (pgvector prints
@@ -119,13 +123,10 @@ export async function syncRagIndex(
   // Embed only the texts with no stored vector, before touching the live index:
   // if this fails, the chat keeps answering from the old one.
   const missing = [...new Set(pending.map((c) => c.content).filter((t) => !vectorByText.has(t)))];
-  if (missing.length > 0 && !process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not set, so the RAG index cannot be built. Set it, then run `npm run rag:ingest`.");
-  }
   for (let i = 0; i < missing.length; i += EMBED_BATCH) {
     const batch = missing.slice(i, i + EMBED_BATCH);
-    const res = await new OpenAI({ apiKey: process.env.OPENAI_API_KEY }).embeddings.create({ model: embeddingModel, input: batch });
-    res.data.forEach((d, j) => vectorByText.set(batch[j], `[${d.embedding.join(",")}]`));
+    const vectors = await embedTexts(batch);
+    vectors.forEach((v, j) => vectorByText.set(batch[j], `[${v.join(",")}]`));
     log(`  embedded ${Math.min(i + EMBED_BATCH, missing.length)}/${missing.length}`);
   }
 
