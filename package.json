@@ -1,9 +1,9 @@
 {
-  "name": "ai-portfolio-starter",
+  "name": "ai-portfolio-builder",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mutlumehmet/ai-portfolio-starter"
+    "url": "https://github.com/mutlumehmet/ai-portfolio-builder"
   },
   "private": true,
   "scripts": {
@@ -65,5 +65,5 @@
   },
   "author": "Mehmet Mutlu",
   "license": "MIT",
-  "description": "Open source portfolio starter with an AI chat, a job-fit check and an MCP server, grounded in your own content (Next.js, Prisma, Postgres with pgvector, OpenAI)."
+  "description": "Open source portfolio builder with an AI chat, a job-fit check and an MCP server, grounded in your own content (Next.js, Prisma, Postgres with pgvector, OpenAI)."
 }

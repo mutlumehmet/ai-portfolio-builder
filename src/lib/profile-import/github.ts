@@ -46,7 +46,7 @@ class GitHubError extends Error {}
 async function gh(path: string, accept = "application/vnd.github+json") {
   const headers: Record<string, string> = {
     Accept: accept,
-    "User-Agent": "ai-portfolio-starter-profile-import",
+    "User-Agent": "ai-portfolio-builder-profile-import",
     "X-GitHub-Api-Version": "2022-11-28",
   };
   if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;

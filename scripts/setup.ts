@@ -289,7 +289,7 @@ async function runImport(): Promise<ImportOutcome | null> {
 }
 
 async function main() {
-  console.log(bold("\nAI Portfolio Starter setup\n"));
+  console.log(bold("\nAI Portfolio Builder setup\n"));
   console.log("Answer a few questions; press Enter to keep the value in brackets.\n");
 
   // 0. Optional import from LinkedIn, a CV and GitHub

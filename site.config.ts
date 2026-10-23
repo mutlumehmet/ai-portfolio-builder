@@ -173,7 +173,7 @@ export const siteConfig = {
   },
 
   footer: {
-    builtWith: "Built with AI Portfolio Starter: Next.js, Prisma, Postgres with pgvector and OpenAI.",
+    builtWith: "Built with AI Portfolio Builder: Next.js, Prisma, Postgres with pgvector and OpenAI.",
   },
 
   // Iframe embeds in project pages (embed blocks). An empty list allows any

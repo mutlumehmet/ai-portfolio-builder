@@ -1,6 +1,6 @@
-# AI Portfolio Starter
+# AI Portfolio Builder
 
-![AI Portfolio Starter banner](docs/images/banner.png)
+![AI Portfolio Builder banner](docs/images/banner.png)
 
 **A complete portfolio website for developers and designers, plus an optional AI layer that answers questions about your work from your own content.**
 
@@ -14,14 +14,14 @@ All three can start from your LinkedIn profile, CV and GitHub: the draft is made
 
 **1. Deploy with Vercel, no code**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter&project-name=my-portfolio&repository-name=my-portfolio&env=AI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20AI%20API%20key%20%28works%20with%20OpenAI%20by%20default%3B%20for%20another%20provider%20set%20AI_BASE_URL%20and%20CHAT_MODEL%20after%20deploy%29%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-starter%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-builder&project-name=my-portfolio&repository-name=my-portfolio&env=AI_API_KEY%2CADMIN_PASSWORD%2CSESSION_SECRET&envDescription=An%20AI%20API%20key%20%28works%20with%20OpenAI%20by%20default%3B%20for%20another%20provider%20set%20AI_BASE_URL%20and%20CHAT_MODEL%20after%20deploy%29%2C%20a%20password%20for%20%2Fadmin%2C%20and%20any%20long%20random%20string%20to%20sign%20the%20admin%20session.&envLink=https%3A%2F%2Fgithub.com%2Fmutlumehmet%2Fai-portfolio-builder%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%7D%5D)
 
 Copies the repo to your GitHub, creates a free Neon database, asks for three values and deploys; the first build sets up the tables, sample content and search index. Then open `/admin/import` on your new site to draft your content from LinkedIn, a CV and GitHub. Details in [Deploy in one click](#deploy-in-one-click).
 
 **2. One command on your machine**
 
 ```bash
-git clone https://github.com/mutlumehmet/ai-portfolio-starter.git my-portfolio
+git clone https://github.com/mutlumehmet/ai-portfolio-builder.git my-portfolio
 cd my-portfolio && npm install && npm run setup
 ```
 
@@ -32,7 +32,7 @@ Offers to import from your LinkedIn, CV and GitHub first, then asks for your nam
 Open the cloned folder in Claude Code, Codex or another coding agent and paste:
 
 ```text
-Set up this AI Portfolio Starter for me. Read README.md and AGENTS.md first, then follow
+Set up this AI Portfolio Builder for me. Read README.md and AGENTS.md first, then follow
 "Setting the site up for a new owner" in AGENTS.md. Start by asking me for my LinkedIn URL,
 CV file and GitHub username, draft my content from them without inventing anything, and
 show me the summary before you write. Then ask me what is missing a few questions at a
@@ -198,7 +198,7 @@ Admin edits and the content scripts re-sync the index automatically. Only change
 
 ## Deploy in one click
 
-The [Deploy with Vercel](#ai-portfolio-starter) button at the top copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your AI API key (`AI_API_KEY`, an OpenAI key by default; see [Choosing an AI provider](#choosing-an-ai-provider) for others), a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
+The [Deploy with Vercel](#ai-portfolio-builder) button at the top copies this repo to your GitHub account, creates a free Neon database for it, and asks for three values: your AI API key (`AI_API_KEY`, an OpenAI key by default; see [Choosing an AI provider](#choosing-an-ai-provider) for others), a password for `/admin`, and a long random string for `SESSION_SECRET` (`openssl rand -base64 32`). The first deploy then sets the database up by itself: it creates the tables, loads the sample content and builds the chat's search index (see [What happens on deploy](#what-happens-on-deploy)). You get a working site with the sample persona; then [make it yours](#make-it-yours) and follow the [cost steps](#cost-and-security) before you share the link.
 
 ## Quick start
 
@@ -206,8 +206,8 @@ You need Node.js 20 or newer and, for the AI layer, an API key from an AI provid
 
 ```bash
 # Use "Use this template" on GitHub, or clone your fork:
-git clone https://github.com/<your-username>/ai-portfolio-starter.git
-cd ai-portfolio-starter
+git clone https://github.com/<your-username>/ai-portfolio-builder.git
+cd ai-portfolio-builder
 npm install
 cp .env.example .env
 ```
@@ -325,6 +325,12 @@ Where to run it:
 * `npm run setup` asks "Import from LinkedIn, CV and GitHub?" first. The draft becomes the default answer to each question, so you can still change any of them, and it writes `site.config.ts` and `content/`.
 * On a deployed site, open `/admin/import`. It saves projects, experience and FAQs to the database, and gives you a `site.config.ts` snippet for your name and home page text to paste, commit and redeploy (a deployed site cannot change its own config). It uses the deployment's AI provider (`AI_API_KEY`).
 * A coding agent can run `npm run import -- --linkedin <url> --cv <path> --github <user> --out draft.json`, show you the summary, and after your yes write it with `npm run import -- --apply draft.json`.
+
+### Why neo-brutalism
+
+Most developer portfolios look the same: a dark hero, a gradient, a grid of cards, the look of a software services company. After a while nobody remembers any of them. Neo-brutalism (thick outlines, hard shadows, flat bold colours) still stands out wherever it is used, and it is easy to read, so it makes a portfolio that people notice and that still looks good. That is why this template uses it.
+
+If you want a different look, you are not locked in. Open the project with your coding agent, give it screenshots or a design you like, and ask it to restyle the site. The colours live in `themes.ts`, the structure in `src/app/globals.css` and the components, so an agent can change either.
 
 ### Colour themes
 
