@@ -8,6 +8,23 @@
 
 *See it live* opens the portfolio this template was extracted from: same structure, AI chat and job-fit check, with its own content and colours.
 
+## Built with AI Portfolio Builder
+
+<table>
+<tr>
+<td valign="top" width="50%">
+<a href="https://www.mehmetmutlu.dev"><img src="docs/images/showcase/mehmetmutlu.png" width="360" alt="Mehmet Mutlu's portfolio in the default neo-brutalist look, coral theme"></a><br>
+<b><a href="https://www.mehmetmutlu.dev">mehmetmutlu.dev</a></b>: Software engineer. The site this template came from, in the default neo-brutalist look.
+</td>
+<td valign="top" width="50%">
+<a href="https://portfolio.alaraakcasiz.com"><img src="docs/images/showcase/alaraakcasiz.png" width="360" alt="Alara Akçasız's portfolio, restyled with soft gradients and a serif headline"></a><br>
+<b><a href="https://portfolio.alaraakcasiz.com">portfolio.alaraakcasiz.com</a></b>: Head of Growth. Same template, restyled into a completely different look.
+</td>
+</tr>
+</table>
+
+Built yours? Open a pull request that adds a card here, with a 1280x800 screenshot in `docs/images/showcase/`.
+
 ## Three ways to set it up
 
 ![Three ways to set it up, pick one: A, Deploy with Vercel with no code; B, npm run setup on your machine; C, ask your coding agent. All three can start from your LinkedIn, CV and GitHub](docs/images/three-ways.png)
