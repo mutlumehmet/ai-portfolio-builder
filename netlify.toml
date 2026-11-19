@@ -1,0 +1,9 @@
+# Netlify: the same build as Vercel. scripts/vercel-build.ts applies migrations,
+# loads content/ into an empty database, refreshes the chat's search index, then
+# runs `npm run build`. Netlify's Next.js runtime is added automatically.
+[build]
+  command = "npm run vercel-build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
