@@ -31,6 +31,9 @@ export function SiteFooter() {
               <Link href="/experience" className="text-sm font-bold hover:underline">
                 Experience
               </Link>
+              <a href="/agents.md" className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline">
+                For AI agents
+              </a>
               {features.cv && (
                 <a href="/cv" className="text-sm font-bold hover:underline">
                   Download CV

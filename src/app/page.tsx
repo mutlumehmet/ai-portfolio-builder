@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/accordion";
 import { ProjectCoverImage } from "@/components/project-cover-image";
 import { SiteFooter } from "@/components/site-footer";
+import { PersonJsonLd } from "@/components/person-json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { features, siteConfig, siteUrl, socialLinks } from "@/lib/config";
 import { prisma } from "@/lib/prisma";
@@ -73,6 +74,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col bg-background text-foreground">
+      <PersonJsonLd />
       <SiteHeader />
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6">
         <section className="grid grid-cols-1 gap-8 py-16 md:grid-cols-[1fr_320px] md:gap-x-10 md:py-20">
