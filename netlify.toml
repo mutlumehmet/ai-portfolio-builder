@@ -7,3 +7,24 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# PostHog proxy at Netlify's edge. Next.js rewrites (next.config.ts) run in a
+# function on Netlify, which corrupts the gzipped event bodies; these proxy
+# rules pass them through untouched. EU region; use us.* hosts for a US project.
+[[redirects]]
+  from = "/ingest/static/*"
+  to = "https://eu-assets.i.posthog.com/static/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ingest/array/*"
+  to = "https://eu-assets.i.posthog.com/array/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/ingest/*"
+  to = "https://eu.i.posthog.com/:splat"
+  status = 200
+  force = true
