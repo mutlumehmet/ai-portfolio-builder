@@ -60,6 +60,11 @@ const themeCss = `:root{${[
   .map(([k, v]) => `${k}:${v}`)
   .join(";")}}`;
 
+// Removes HTML comments (and the stray text around them) from <head> before
+// React hydrates: Netlify's free plan inserts one there, and React would treat
+// it as a hydration mismatch and re-render the page from scratch.
+const headCleanScript = `try{for(var n=document.head.firstChild;n;){var x=n.nextSibling;if(n.nodeType===8||n.nodeType===3)n.remove();n=x}}catch(e){}`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -68,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <style>{themeCss}</style>
+        <script dangerouslySetInnerHTML={{ __html: headCleanScript }} />
         {/* Points AI tools reading any page to the site as plain text. */}
         <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="Everything on this site as Markdown" />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="Site map for AI tools (llms.txt)" />
