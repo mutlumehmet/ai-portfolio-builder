@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const { person, seo, contact, socials, about, home } = siteConfig;
+  const { person, seo, contact, socials, hero, home } = siteConfig;
   const [projects, roles, faqs] = await Promise.all([
     prisma.project.findMany({
       orderBy: [{ category: "asc" }, { order: "asc" }],
@@ -24,16 +24,13 @@ export async function GET() {
     `${person.role}, based in ${person.location}. Website: ${siteUrl}. How AI agents should use this file: ${siteUrl}/agents.md`,
 
     "## About",
-    [about.intro, ...about.paragraphs].join("\n\n"),
+    hero.paragraphs.join("\n\n"),
 
-    "## How I work",
-    home.traits.map((t) => `- **${t.title}**: ${t.description} (Proof: ${siteUrl}${t.proofHref})`).join("\n"),
+    "## Highlights",
+    home.stats.map((s) => `- **${s.value}**: ${s.description} (Proof: ${siteUrl}${s.href})`).join("\n"),
 
-    "## Systems I have designed",
-    home.systems.map((s) => `- **${s.title}**: ${s.description} (Proof: ${siteUrl}${s.proofHref})`).join("\n"),
-
-    "## Certificates and education",
-    home.credentials.map((c) => `- ${c.year ? `${c.year}: ` : ""}${c.title}, ${c.issuer}`).join("\n"),
+    "## Career path",
+    [home.journey.heading, home.journey.steps.map((s) => `- ${s.period}: ${s.description}`).join("\n")].filter(Boolean).join("\n\n"),
 
     "## Experience",
     roles
@@ -65,9 +62,6 @@ export async function GET() {
       })
       .join("\n\n"),
 
-    "## Stack",
-    home.stackOrder.join(", "),
-
     "## FAQ",
     faqs.map((f) => `### ${f.question}\n\n${f.answer}`).join("\n\n"),
 
@@ -76,7 +70,7 @@ export async function GET() {
       contact.email && `- Email: ${contact.email}`,
       socials.linkedin && `- LinkedIn: ${socials.linkedin}`,
       socials.github && `- GitHub: ${socials.github}`,
-      features.cv && `- CV (PDF): ${siteUrl}/cv.pdf`,
+      features.cv && `- CV (PDF): ${siteUrl}/cv`,
     ]
       .filter(Boolean)
       .join("\n"),
