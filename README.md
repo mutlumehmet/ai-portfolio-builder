@@ -269,6 +269,14 @@ Open http://localhost:3000.
 3. Deploy. The first build prepares the database, as below.
 4. Before you share the link, follow the cost steps in [Cost and security](#cost-and-security).
 
+### Deploy to Netlify
+
+The same build runs on Netlify. `netlify.toml` already sets the build command (`npm run vercel-build`, which prepares the database as below) and Node 22; Netlify adds its Next.js runtime by itself.
+
+1. Push your copy to GitHub and import it in Netlify.
+2. Add the same environment variables as for Vercel. The site URL comes from Netlify's own `URL` value, so `NEXT_PUBLIC_SITE_URL` is again only needed for a custom domain.
+3. Deploy. Netlify's CDN keeps each public page for 5 minutes and refreshes it in the background, so visitors do not wait on the database; `/admin` and the API routes are never cached.
+
 ### What happens on deploy
 
 Vercel runs `npm run vercel-build` (`scripts/vercel-build.ts`), which runs these steps before the normal build:
@@ -293,6 +301,8 @@ Without `DATABASE_URL` the steps are skipped and only the site is built. `npm ru
 | `EMBEDDING_MODEL` | No | Defaults to `text-embedding-3-small` (1536 dimensions). `none` switches embeddings, and with them the chat, fit check and MCP server, off. |
 | `EMBEDDING_DIMENSIONS` | No | Sent as `dimensions`, for an embedding model that can shorten its output to 1536. |
 | `NEXT_PUBLIC_SITE_URL` | No | Public URL; overrides `url` in `site.config.ts`. |
+| `NEXT_PUBLIC_POSTHOG_KEY` | No | PostHog project key (`phc_...`). Analytics stay off without it. See [Analytics](#analytics-optional). |
+| `NEXT_PUBLIC_POSTHOG_REGION` | No | `eu` (default) or `us`, where your PostHog project lives. |
 | `FEATURE_*` | No | Feature flag overrides, see below. |
 | `RATE_LIMIT_PER_MINUTE`, `RATE_LIMIT_PER_DAY` | No | Per-IP limits for the AI endpoints. |
 | `GITHUB_TOKEN` | No | Used by the profile import for a higher GitHub rate limit. Without it, GitHub allows 60 requests an hour. |
@@ -392,6 +402,10 @@ The fit check is a guide, not proof: it only knows what is on your site, and the
 
 See [SECURITY.md](SECURITY.md) to report a vulnerability.
 
+## Analytics (optional)
+
+Set `NEXT_PUBLIC_POSTHOG_KEY` to send page views and clicks to [PostHog](https://posthog.com). Without the key nothing is loaded. The library loads once the browser is idle, so it stays out of the first paint; events go through the site's own `/ingest` path, so fewer ad blockers drop them; and `/admin` is never tracked. Vercel Web Analytics works alongside it if you deploy there.
+
 ## MCP usage
 
 With `mcp` on, your deployed site is a remote MCP server (Streamable HTTP) at `https://your-domain/api/mcp` with these tools:
@@ -410,6 +424,19 @@ claude mcp add --transport http your-portfolio https://your-domain/api/mcp
 
 Other MCP clients that support remote HTTP servers take the same URL. MCP calls share the per-IP rate limits of the site.
 
+## Readable by AI agents
+
+Recruiters increasingly ask an AI assistant about a candidate, so the site also explains itself to agents, with no setup:
+
+| Path | What it is |
+|---|---|
+| `/llms.txt` | A short map of the site in the [llms.txt](https://llmstxt.org) format: who you are, the pages, every project and role. |
+| `/llms-full.txt` | Everything on the site in one Markdown file: about, highlights, career path, experience, every case study, FAQ and contact. |
+| `/agents.md` | How an agent should use the site: where the facts are, how to cite them, and not to guess. Add your own rules in `agents.notes` in `site.config.ts` (for example that some work is under NDA). |
+| `/sitemap.xml`, `/robots.txt` | For search engines. |
+
+The home page also carries schema.org `ProfilePage` data (your role, employer, education and topics from `person` in `site.config.ts`), and every page links to `/llms.txt` and `/llms-full.txt` in its head.
+
 ## Project structure
 
 ```
@@ -417,7 +444,7 @@ site.config.ts        everything person-specific, plus feature flags
 content/              sample projects, experience and FAQs (JSON)
 prisma/               schema, single init migration, seed (loads content/)
 scripts/              setup, profile import, ingest, project upsert and delete, cover measuring
-src/app/              pages, admin, API routes (chat, fit-check, parse-jd, mcp), /cv
+src/app/              pages, admin, API routes (chat, fit-check, parse-jd, mcp), /cv, llms.txt, agents.md
 src/components/       UI, including shadcn/ui primitives in ui/
 src/lib/              config, RAG, index sync, auth, rate limiting, content blocks, profile import
 public/               avatar, sample CV, project images, embed video player
@@ -437,6 +464,7 @@ docker-compose.yml    local Postgres with pgvector
 * Several themes are adapted from the [neobrutalism palettes collected on colorany.com](https://colorany.com/color-palettes/neobrutalism-color-palettes/).
 * [Simple Icons](https://simpleicons.org) for the GitHub mark (CC0).
 * DM Sans and Geist Mono fonts (SIL Open Font License), via `next/font`.
+* [Hakan Baybaş](https://github.com/bybash) for the AI agent files (`llms.txt`, `llms-full.txt`, `agents.md`, structured data), Netlify support and optional PostHog analytics, from [his fork](https://github.com/bybash/ai-portfolio-builder).
 * Built on Next.js, React, Prisma, pgvector, Tailwind CSS, OpenAI, mcp-handler, unpdf and mammoth.
 
 ## Licence
