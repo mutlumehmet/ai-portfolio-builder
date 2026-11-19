@@ -1,12 +1,10 @@
-import { siteConfig, siteUrl } from "@/lib/config";
+import { features, siteConfig, siteUrl } from "@/lib/config";
 
 // schema.org data for search engines and AI tools: the home page is a
 // ProfilePage about one Person, with the current role, education,
 // certificates, skills and the profiles that are the same person (sameAs).
 export function PersonJsonLd() {
-  const { person, socials, seo, home } = siteConfig;
-  // Certificates only; education is in alumniOf.
-  const credentials = home.credentials.filter((c) => c.year && c.title !== person.alumniOf && c.issuer !== person.alumniOf);
+  const { person, socials, seo } = siteConfig;
   const data = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
@@ -30,15 +28,12 @@ export function PersonJsonLd() {
         ...(person.location && { occupationLocation: { "@type": "City", name: person.location } }),
       },
       ...(person.alumniOf && { alumniOf: { "@type": "CollegeOrUniversity", name: person.alumniOf } }),
-      hasCredential: credentials.map((c) => ({
-        "@type": "EducationalOccupationalCredential",
-        name: c.title,
-        recognizedBy: { "@type": "Organization", name: c.issuer.split(",")[0] },
-      })),
       ...(person.location && { address: { "@type": "PostalAddress", addressLocality: person.location } }),
-      knowsAbout: [...new Set([...person.knowsAbout, ...home.stackOrder.slice(0, 12)])],
+      ...(person.knowsAbout.length > 0 && { knowsAbout: person.knowsAbout }),
       sameAs: [socials.linkedin, socials.github].filter(Boolean),
-      subjectOf: { "@type": "DigitalDocument", name: `${person.name} CV`, url: `${siteUrl}/cv.pdf`, encodingFormat: "application/pdf" },
+      ...(features.cv && {
+        subjectOf: { "@type": "DigitalDocument", name: `${person.name} CV`, url: `${siteUrl}/cv`, encodingFormat: "application/pdf" },
+      }),
     },
   };
   return (

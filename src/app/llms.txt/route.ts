@@ -22,13 +22,9 @@ export async function GET() {
     `${person.role}, based in ${person.location}.`,
     "",
     "## Pages",
-    `- [About me](${siteUrl}/about)`,
     `- [Work](${siteUrl}/projects): case studies, each with what I did and how`,
-    ...(siteConfig.home.traits.length > 0
-      ? [`- [How I work](${siteUrl}/how-i-work): working habits, each with a project as proof`]
-      : []),
     `- [Experience](${siteUrl}/experience): every role, with dates`,
-    ...(features.cv ? [`- [CV (PDF)](${siteUrl}/cv.pdf)`] : []),
+    ...(features.cv ? [`- [CV (PDF)](${siteUrl}/cv)`] : []),
     "",
     "## For AI agents",
     `- [Everything in one file](${siteUrl}/llms-full.txt): every page's content as Markdown`,
