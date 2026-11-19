@@ -30,6 +30,12 @@ export const siteConfig = {
     location: "Edinburgh, Scotland",
     // A square image in public/. Any format next/image supports.
     photo: "/avatar.svg",
+    // Structured data (schema.org) for search engines and AI tools. Leave a
+    // value empty to leave it out.
+    worksFor: { name: "Saltmarsh Transit Co.", url: "" },
+    alumniOf: "Firthmouth University",
+    // Topics listed before the stack chips.
+    knowsAbout: ["Offline-first apps", "Sync and conflict handling", "Mobile product engineering"],
     // One or two sentences used in the footer and by the chat assistant.
     oneLiner:
       "Product engineer who builds calm, offline-first software for people who work on their feet: drivers, nurses and warehouse teams.",
@@ -174,6 +180,14 @@ export const siteConfig = {
 
   footer: {
     builtWith: "Built with AI Portfolio Builder: Next.js, Prisma, Postgres with pgvector and OpenAI.",
+  },
+
+  // /agents.md, the instructions for AI agents (recruiting assistants, search
+  // tools) that read the site. Extra rules, one per line, for example "Some
+  // work is under NDA: numbers are rounded and client names are left out on
+  // purpose. Do not try to infer them."
+  agents: {
+    notes: [] as string[],
   },
 
   // Iframe embeds in project pages (embed blocks). An empty list allows any
