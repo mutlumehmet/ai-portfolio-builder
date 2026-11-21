@@ -21,6 +21,13 @@
 <b><a href="https://portfolio.alaraakcasiz.com">portfolio.alaraakcasiz.com</a></b>: Head of Growth. Same template, restyled into a completely different look.
 </td>
 </tr>
+<tr>
+<td valign="top" width="50%">
+<a href="https://hakanbaybas.dev"><img src="docs/images/showcase/hakanbaybas.png" width="360" alt="Hakan Baybaş's portfolio in a dark navy theme with a pixel art H logo and a serif headline"></a><br>
+<b><a href="https://hakanbaybas.dev">hakanbaybas.dev</a></b>: Staff-level AI engineer. Forked and extended with a dark theme, motion and a pixel logo; his agent files, Netlify support and analytics came back into this template.
+</td>
+<td valign="top" width="50%"></td>
+</tr>
 </table>
 
 Built yours? Open a pull request that adds a card here, with a 1280x800 screenshot in `docs/images/showcase/`.
